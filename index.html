@@ -1,1559 +1,2105 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulasi Instrumen Penilaian Peserta Inklusif – DAD IMM</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --green: #1A6B3C;
-    --green-mid: #2D8A55;
-    --green-light: #E8F5EE;
-    --green-glow: rgba(26,107,60,0.12);
-    --amber: #C47B00;
-    --amber-light: #FFF8E7;
-    --blue: #1A3A6B;
-    --blue-light: #EBF0FA;
-    --purple: #4A1A8C;
-    --purple-light: #F0EAF9;
-    --red: #B91C1C;
-    --red-light: #FEF2F2;
-    --ink: #1A1A1A;
-    --muted: #6B7280;
-    --border: #D1D5DB;
-    --surface: #FAFAF8;
-    --white: #FFFFFF;
-    --shadow: 0 4px 24px rgba(0,0,0,0.08);
-    --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Instrumen Penilaian Peserta Inklusif – DAD IMM</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --green: #1A6B3C;
+      --green-mid: #2D8A55;
+      --green-light: #E8F5EE;
+      --green-glow: rgba(26, 107, 60, 0.12);
+      --amber: #C47B00;
+      --amber-light: #FFF8E7;
+      --blue: #1A3A6B;
+      --blue-light: #EBF0FA;
+      --purple: #4A1A8C;
+      --purple-light: #F0EAF9;
+      --red: #B91C1C;
+      --red-light: #FEF2F2;
+      --ink: #1A1A1A;
+      --muted: #6B7280;
+      --border: #D1D5DB;
+      --surface: #FAFAF8;
+      --white: #FFFFFF;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.14);
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--surface);
-    color: var(--ink);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  /* ─── HEADER ─── */
-  .app-header {
-    background: linear-gradient(135deg, var(--green) 0%, #0F4D2A 60%, #0A3320 100%);
-    padding: 32px 40px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .app-header::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-  .header-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.9);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.2);
-    margin-bottom: 14px;
-    text-transform: uppercase;
-  }
-  .app-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(22px, 4vw, 36px);
-    color: #fff;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
-  .app-header p {
-    color: rgba(255,255,255,0.7);
-    font-size: 14px;
-    max-width: 560px;
-  }
-  .header-right {
-    position: absolute;
-    right: 40px; top: 50%;
-    transform: translateY(-50%);
-    text-align: right;
-    display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
-  }
-  .progress-ring-wrap { display: flex; align-items: center; gap: 12px; }
-  .progress-label { color: rgba(255,255,255,0.75); font-size: 12px; }
-  .progress-score {
-    font-family: 'Playfair Display', serif;
-    font-size: 38px; font-weight: 900;
-    color: #fff;
-    line-height: 1;
-  }
-  .progress-score span { font-size: 16px; color: rgba(255,255,255,0.6); }
+    /* ─── HEADER ─── */
+    .app-header {
+      background: linear-gradient(135deg, var(--green) 0%, #0F4D2A 60%, #0A3320 100%);
+      padding: 32px 40px 28px;
+      position: relative;
+      overflow: hidden;
+    }
 
-  /* ─── LAYOUT ─── */
-  .app-body {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    min-height: calc(100vh - 120px);
-  }
+    .app-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
 
-  /* ─── SIDEBAR ─── */
-  .sidebar {
-    background: var(--white);
-    border-right: 1px solid var(--border);
-    padding: 24px 0;
-    position: sticky;
-    top: 0; height: calc(100vh - 120px);
-    overflow-y: auto;
-  }
-  .sidebar-section-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 0 20px 10px;
-  }
-  .nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 11px 20px;
-    cursor: pointer;
-    border-left: 3px solid transparent;
-    transition: all .2s;
-    font-size: 13px;
-    color: var(--muted);
-    position: relative;
-  }
-  .nav-item:hover { background: var(--green-light); color: var(--green); }
-  .nav-item.active {
-    background: var(--green-light);
-    border-left-color: var(--green);
-    color: var(--green);
-    font-weight: 600;
-  }
-  .nav-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--border);
-    flex-shrink: 0;
-    transition: background .2s;
-  }
-  .nav-item.active .nav-dot,
-  .nav-item.done .nav-dot { background: var(--green); }
-  .nav-check {
-    margin-left: auto;
-    font-size: 13px;
-    color: var(--green);
-    opacity: 0;
-    transition: opacity .2s;
-  }
-  .nav-item.done .nav-check { opacity: 1; }
-  .sidebar-divider { height: 1px; background: var(--border); margin: 16px 20px; }
+    .header-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.9);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
 
-  /* ─── PESERTA INFO CARD (sidebar) ─── */
-  .peserta-card {
-    margin: 0 12px 16px;
-    background: linear-gradient(135deg, var(--green-light), #fff);
-    border: 1.5px solid rgba(26,107,60,0.2);
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 13px;
-  }
-  .peserta-card-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 10px;
-  }
-  .peserta-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--green), var(--green-mid));
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 18px;
-    margin-bottom: 10px;
-  }
-  .peserta-name { font-weight: 600; color: var(--ink); margin-bottom: 2px; }
-  .peserta-meta { color: var(--muted); font-size: 12px; }
-  .peserta-tag {
-    display: inline-block;
-    margin-top: 8px;
-    background: rgba(26,107,60,0.1);
-    color: var(--green);
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 500;
-  }
+    .app-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 4vw, 36px);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
 
-  /* ─── MAIN CONTENT ─── */
-  .main-content { padding: 32px 40px; }
+    .app-header p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      max-width: 560px;
+    }
 
-  /* ─── STEP / SCENE SYSTEM ─── */
-  .scene { display: none; animation: fadeSlide .35s ease; }
-  .scene.active { display: block; }
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .header-right {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
 
-  /* ─── STEP HEADER ─── */
-  .step-header {
-    display: flex; align-items: flex-start; gap: 16px;
-    margin-bottom: 28px;
-  }
-  .step-number {
-    width: 48px; height: 48px;
-    background: var(--green);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 900;
-    color: #fff;
-    flex-shrink: 0;
-  }
-  .step-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .step-subtitle { color: var(--muted); font-size: 14px; }
+    .progress-ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  /* ─── SCENARIO BOX ─── */
-  .scenario-box {
-    background: linear-gradient(135deg, #EBF0FA, #F7F9FD);
-    border: 1.5px solid rgba(26,58,107,0.15);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .scenario-box::before {
-    content: '"';
-    position: absolute;
-    top: -10px; left: 16px;
-    font-family: 'Playfair Display', serif;
-    font-size: 80px;
-    color: rgba(26,58,107,0.08);
-    line-height: 1;
-  }
-  .scenario-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 8px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .scenario-tag::before {
-    content: '';
-    width: 20px; height: 2px;
-    background: var(--blue);
-    border-radius: 2px;
-  }
-  .scenario-box p { color: var(--blue); font-size: 15px; line-height: 1.7; }
-  .scenario-box strong { color: var(--ink); }
+    .progress-label {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 12px;
+    }
 
-  /* ─── SECTION CARD ─── */
-  .section-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-  }
-  .section-card-header {
-    padding: 16px 24px;
-    display: flex; align-items: center; gap: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .section-card-header h3 {
-    font-size: 15px; font-weight: 600;
-    color: var(--ink);
-    flex: 1;
-  }
-  .section-card-header .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    padding: 3px 10px;
-    border-radius: 20px;
-  }
+    .progress-score {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
 
-  /* ─── INDICATOR ROW ─── */
-  .indicator-list { padding: 8px 0; }
-  .indicator-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 14px 24px;
-    border-bottom: 1px solid #F3F4F6;
-    transition: background .15s;
-  }
-  .indicator-row:last-child { border-bottom: none; }
-  .indicator-row:hover { background: #FAFAFA; }
-  .indicator-number {
-    width: 26px; height: 26px;
-    border-radius: 8px;
-    background: var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600;
-    color: var(--muted);
-    flex-shrink: 0;
-    transition: all .2s;
-  }
-  .indicator-text {
-    flex: 1;
-    font-size: 14px;
-    color: var(--ink);
-    line-height: 1.5;
-  }
-  .indicator-text .hint {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-  .toggle-group {
-    display: flex; gap: 6px;
-    flex-shrink: 0;
-  }
-  .toggle-btn {
-    padding: 6px 16px;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    background: transparent;
-    font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    transition: all .2s;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--muted);
-  }
-  .toggle-btn:hover { border-color: var(--green); color: var(--green); }
-  .toggle-btn.yes { background: var(--green); border-color: var(--green); color: #fff; }
-  .toggle-btn.no { background: #F3F4F6; border-color: #E5E7EB; color: var(--muted); }
-  .indicator-row.fulfilled .indicator-number {
-    background: var(--green);
-    color: #fff;
-  }
+    .progress-score span {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+    }
 
-  /* ─── SCORE BADGE ─── */
-  .score-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 20px;
-    border-radius: 100px;
-    font-weight: 600;
-    font-size: 15px;
-  }
-  .score-badge.sangat-baik { background: var(--green-light); color: var(--green); }
-  .score-badge.baik { background: var(--blue-light); color: var(--blue); }
-  .score-badge.cukup { background: var(--amber-light); color: var(--amber); }
-  .score-badge.kurang { background: var(--red-light); color: var(--red); }
+    /* ─── LAYOUT ─── */
+    .app-body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 120px);
+    }
 
-  /* ─── CATATAN AREA ─── */
-  .catatan-area {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    resize: vertical;
-    min-height: 90px;
-    outline: none;
-    transition: border-color .2s;
-    background: var(--white);
-    color: var(--ink);
-  }
-  .catatan-area:focus { border-color: var(--green); }
-  .catatan-label {
-    font-size: 13px; font-weight: 500;
-    color: var(--muted);
-    margin-bottom: 6px;
-    display: block;
-  }
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
 
-  /* ─── BUTTONS ─── */
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 28px;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all .2s;
-    text-decoration: none;
-  }
-  .btn-primary {
-    background: var(--green);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(26,107,60,0.3);
-  }
-  .btn-primary:hover { background: #155C34; transform: translateY(-1px); }
-  .btn-secondary {
-    background: var(--white);
-    color: var(--ink);
-    border: 1.5px solid var(--border);
-  }
-  .btn-secondary:hover { border-color: var(--green); color: var(--green); }
-  .btn-amber {
-    background: var(--amber);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(196,123,0,0.3);
-  }
-  .btn-amber:hover { background: #A36800; }
-  .btn-actions {
-    display: flex; gap: 12px; margin-top: 28px;
-    flex-wrap: wrap;
-  }
+    .sidebar-section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 20px 10px;
+    }
 
-  /* ─── FEEDBACK BOX ─── */
-  .feedback-box {
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-top: 20px;
-    display: none;
-    animation: fadeSlide .3s ease;
-  }
-  .feedback-box.show { display: block; }
-  .feedback-box.success { background: var(--green-light); border: 1.5px solid rgba(26,107,60,0.2); }
-  .feedback-box.warning { background: var(--amber-light); border: 1.5px solid rgba(196,123,0,0.2); }
-  .feedback-box.info { background: var(--blue-light); border: 1.5px solid rgba(26,58,107,0.15); }
-  .feedback-title {
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 600; margin-bottom: 8px; font-size: 15px;
-  }
-  .feedback-box p { font-size: 14px; line-height: 1.7; color: var(--ink); }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 20px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+      font-size: 13px;
+      color: var(--muted);
+      position: relative;
+    }
 
-  /* ─── HASIL / REKAP ─── */
-  .rekap-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .rekap-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
-  }
-  .rekap-card .value {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px; font-weight: 900;
-    color: var(--green);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .rekap-card .label {
-    font-size: 12px; color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'DM Mono', monospace;
-  }
+    .nav-item:hover {
+      background: var(--green-light);
+      color: var(--green);
+    }
 
-  .materi-result-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 20px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-  .materi-result-row:last-child { border-bottom: none; }
-  .materi-result-row .name { font-weight: 500; color: var(--ink); }
-  .materi-result-row .score-bar-wrap { flex: 1; margin: 0 16px; }
-  .score-bar-bg {
-    height: 6px; background: #F3F4F6;
-    border-radius: 10px; overflow: hidden;
-  }
-  .score-bar-fill {
-    height: 100%; background: var(--green);
-    border-radius: 10px;
-    transition: width .6s ease;
-  }
-  .score-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--green); min-width: 40px; text-align: right; }
+    .nav-item.active {
+      background: var(--green-light);
+      border-left-color: var(--green);
+      color: var(--green);
+      font-weight: 600;
+    }
 
-  /* ─── TIPBOX / HINT ─── */
-  .tipbox {
-    background: linear-gradient(135deg, var(--amber-light), #FFFBF0);
-    border: 1.5px solid rgba(196,123,0,0.2);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--ink);
-  }
-  .tipbox-title {
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 600; color: var(--amber);
-    margin-bottom: 6px; font-size: 13px;
-    text-transform: uppercase; letter-spacing: 1px;
-    font-family: 'DM Mono', monospace;
-  }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background .2s;
+    }
 
-  /* ─── INTRO SCENE ─── */
-  .intro-hero {
-    text-align: center;
-    padding: 40px 20px 32px;
-  }
-  .intro-icon {
-    width: 80px; height: 80px;
-    background: linear-gradient(135deg, var(--green), var(--green-mid));
-    border-radius: 24px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-    margin: 0 auto 24px;
-    box-shadow: 0 8px 32px rgba(26,107,60,0.25);
-  }
-  .intro-hero h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px; font-weight: 900;
-    margin-bottom: 12px;
-    color: var(--ink);
-  }
-  .intro-hero p { color: var(--muted); font-size: 15px; max-width: 500px; margin: 0 auto 32px; line-height: 1.7; }
-  .intro-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    max-width: 700px; margin: 0 auto 36px;
-    text-align: left;
-  }
-  .intro-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
-  .intro-card .ico { font-size: 24px; margin-bottom: 10px; }
-  .intro-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
-  .intro-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .nav-item.active .nav-dot,
+    .nav-item.done .nav-dot {
+      background: var(--green);
+    }
 
-  /* ─── PROGRESS BAR (top) ─── */
-  .progress-track {
-    display: flex; gap: 4px;
-    padding: 16px 40px;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 10;
-    align-items: center;
-  }
-  .progress-step {
-    flex: 1; height: 4px;
-    background: var(--border);
-    border-radius: 4px;
-    transition: background .3s;
-    cursor: pointer;
-  }
-  .progress-step.done { background: var(--green); }
-  .progress-step.active { background: var(--green-mid); }
-  .progress-label-track {
-    font-size: 12px; color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    margin-left: 12px;
-    white-space: nowrap;
-  }
+    .nav-check {
+      margin-left: auto;
+      font-size: 13px;
+      color: var(--green);
+      opacity: 0;
+      transition: opacity .2s;
+    }
 
-  /* ─── TIPS PANEL ─── */
-  .tips-float {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    z-index: 100;
-  }
-  .tips-toggle {
-    width: 52px; height: 52px;
-    background: var(--green);
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 22px;
-    box-shadow: var(--shadow-lg);
-    display: flex; align-items: center; justify-content: center;
-    transition: transform .2s;
-    color: #fff;
-  }
-  .tips-toggle:hover { transform: scale(1.1); }
-  .tips-panel {
-    position: absolute;
-    bottom: 64px; right: 0;
-    width: 300px;
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
-    padding: 20px;
-    display: none;
-    animation: fadeSlide .2s ease;
-  }
-  .tips-panel.open { display: block; }
-  .tips-panel h4 {
-    font-weight: 700; font-size: 14px;
-    margin-bottom: 12px; color: var(--green);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .tips-panel ul { list-style: none; }
-  .tips-panel li {
-    font-size: 13px; color: var(--ink);
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    line-height: 1.6;
-    display: flex; gap: 8px;
-    align-items: flex-start;
-  }
-  .tips-panel li:last-child { border-bottom: none; }
-  .tips-panel li::before { content: '💡'; flex-shrink: 0; }
+    .nav-item.done .nav-check {
+      opacity: 1;
+    }
 
-  @media (max-width: 768px) {
-    .app-body { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .main-content { padding: 20px; }
-    .header-right { display: none; }
-    .intro-cards { grid-template-columns: 1fr; }
-  }
-</style>
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 20px;
+    }
+
+    /* ─── PESERTA INFO CARD (sidebar) ─── */
+    .peserta-card {
+      margin: 0 12px 16px;
+      background: linear-gradient(135deg, var(--green-light), #fff);
+      border: 1.5px solid rgba(26, 107, 60, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13px;
+    }
+
+    .peserta-card-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    .peserta-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--green-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .peserta-name {
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .peserta-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .peserta-tag {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(26, 107, 60, 0.1);
+      color: var(--green);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ─── MAIN CONTENT ─── */
+    .main-content {
+      padding: 32px 40px;
+    }
+
+    /* ─── STEP / SCENE SYSTEM ─── */
+    .scene {
+      display: none;
+      animation: fadeSlide .35s ease;
+    }
+
+    .scene.active {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── STEP HEADER ─── */
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--green);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .step-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ─── SCENARIO BOX ─── */
+    .scenario-box {
+      background: linear-gradient(135deg, #EBF0FA, #F7F9FD);
+      border: 1.5px solid rgba(26, 58, 107, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scenario-box::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      color: rgba(26, 58, 107, 0.08);
+      line-height: 1;
+    }
+
+    .scenario-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .scenario-tag::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    .scenario-box p {
+      color: var(--blue);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .scenario-box strong {
+      color: var(--ink);
+    }
+
+    /* ─── SECTION CARD ─── */
+    .section-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card-header {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .section-card-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      flex: 1;
+    }
+
+    .section-card-header .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ─── INDICATOR ROW ─── */
+    .indicator-list {
+      padding: 8px 0;
+    }
+
+    .indicator-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 24px;
+      border-bottom: 1px solid #F3F4F6;
+      transition: background .15s;
+    }
+
+    .indicator-row:last-child {
+      border-bottom: none;
+    }
+
+    .indicator-row:hover {
+      background: #FAFAFA;
+    }
+
+    .indicator-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+
+    .indicator-text {
+      flex: 1;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .indicator-text .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .toggle-btn {
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--muted);
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .toggle-btn.yes {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .toggle-btn.no {
+      background: #F3F4F6;
+      border-color: #E5E7EB;
+      color: var(--muted);
+    }
+
+    .indicator-row.fulfilled .indicator-number {
+      background: var(--green);
+      color: #fff;
+    }
+
+    /* ─── SCORE BADGE ─── */
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .score-badge.sangat-baik {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .score-badge.baik {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    .score-badge.cukup {
+      background: var(--amber-light);
+      color: var(--amber);
+    }
+
+    .score-badge.kurang {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    /* ─── CATATAN AREA ─── */
+    .catatan-area {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 90px;
+      outline: none;
+      transition: border-color .2s;
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .catatan-area:focus {
+      border-color: var(--green);
+    }
+
+    .catatan-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(26, 107, 60, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #155C34;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .btn-amber {
+      background: var(--amber);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(196, 123, 0, 0.3);
+    }
+
+    .btn-amber:hover {
+      background: #A36800;
+    }
+
+    .btn-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── FEEDBACK BOX ─── */
+    .feedback-box {
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-top: 20px;
+      display: none;
+      animation: fadeSlide .3s ease;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.success { background: var(--green-light); border: 1.5px solid rgba(26,107,60,0.2); }
+    .feedback-box.warning { background: var(--amber-light); border: 1.5px solid rgba(196,123,0,0.2); }
+    .feedback-box.info { background: var(--blue-light); border: 1.5px solid rgba(26,58,107,0.15); }
+    .feedback-title {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 600; margin-bottom: 8px; font-size: 15px;
+    }
+    .feedback-box p { font-size: 14px; line-height: 1.7; color: var(--ink); }
+
+    /* ─── FEEDBACK FORM (Scene 4) ─── */
+    .fb-form-section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .fb-form-header {
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .fb-form-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+    .likert-group { display: flex; flex-direction: column; gap: 8px; }
+    .likert-label { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+    .likert-scale {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .likert-btn {
+      flex: 1; min-width: 60px;
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .likert-btn:hover { border-color: var(--green); color: var(--green); }
+    .likert-btn.selected { background: var(--green); border-color: var(--green); color: #fff; }
+
+    .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+    .checkbox-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .checkbox-item:hover { border-color: var(--green); background: var(--green-light); }
+    .checkbox-item.checked { border-color: var(--green); background: var(--green-light); }
+    .checkbox-item input[type=checkbox] { display: none; }
+    .checkbox-box {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all .2s;
+      font-size: 12px;
+      margin-top: 1px;
+    }
+    .checkbox-item.checked .checkbox-box { background: var(--green); border-color: var(--green); color: #fff; }
+    .checkbox-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field label { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      background: var(--white);
+      color: var(--ink);
+    }
+    .form-input:focus { border-color: var(--green); }
+    .star-rating { display: flex; gap: 6px; }
+    .star-btn {
+      font-size: 26px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform .15s;
+      color: #D1D5DB;
+      line-height: 1;
+    }
+    .star-btn:hover, .star-btn.lit { color: #F59E0B; transform: scale(1.15); }
+
+    /* ─── HASIL / REKAP ─── */
+    .rekap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .rekap-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .rekap-card .value {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .rekap-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .materi-result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .materi-result-row:last-child {
+      border-bottom: none;
+    }
+
+    .materi-result-row .name {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .materi-result-row .score-bar-wrap {
+      flex: 1;
+      margin: 0 16px;
+    }
+
+    .score-bar-bg {
+      height: 6px;
+      background: #F3F4F6;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 10px;
+      transition: width .6s ease;
+    }
+
+    .score-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--green);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* ─── TIPBOX / HINT ─── */
+    .tipbox {
+      background: linear-gradient(135deg, var(--amber-light), #FFFBF0);
+      border: 1.5px solid rgba(196, 123, 0, 0.2);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .tipbox-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--amber);
+      margin-bottom: 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ─── INTRO SCENE ─── */
+    .intro-hero {
+      text-align: center;
+      padding: 40px 20px 32px;
+    }
+
+    .intro-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--green), var(--green-mid));
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 32px rgba(26, 107, 60, 0.25);
+    }
+
+    .intro-hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+
+    .intro-hero p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 500px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .intro-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 700px;
+      margin: 0 auto 36px;
+      text-align: left;
+    }
+
+    .intro-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .intro-card .ico {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .intro-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .intro-card p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── PROGRESS BAR (top) ─── */
+    .progress-track {
+      display: flex;
+      gap: 4px;
+      padding: 16px 40px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      align-items: center;
+    }
+
+    .progress-step {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      transition: background .3s;
+      cursor: pointer;
+    }
+
+    .progress-step.done {
+      background: var(--green);
+    }
+
+    .progress-step.active {
+      background: var(--green-mid);
+    }
+
+    .progress-label-track {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      margin-left: 12px;
+      white-space: nowrap;
+    }
+
+    /* ─── TIPS PANEL ─── */
+    .tips-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+    }
+
+    .tips-toggle {
+      width: 52px;
+      height: 52px;
+      background: var(--green);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s;
+      color: #fff;
+    }
+
+    .tips-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .tips-panel {
+      position: absolute;
+      bottom: 64px;
+      right: 0;
+      width: 300px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      padding: 20px;
+      display: none;
+      animation: fadeSlide .2s ease;
+    }
+
+    .tips-panel.open {
+      display: block;
+    }
+
+    .tips-panel h4 {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tips-panel ul {
+      list-style: none;
+    }
+
+    .tips-panel li {
+      font-size: 13px;
+      color: var(--ink);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .tips-panel li:last-child {
+      border-bottom: none;
+    }
+
+    .tips-panel li::before {
+      content: '💡';
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .header-right {
+        display: none;
+      }
+
+      .intro-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- HEADER -->
-<div class="app-header">
-  <div class="header-badge">🎓 Simulasi Instruktur</div>
-  <h1>Instrumen Penilaian<br>Peserta Inklusif / Disabilitas</h1>
-  <p>Latihan penggunaan lembar observasi & pendampingan dalam kegiatan Darul Arqam Dasar (DAD) IMM</p>
-  <div class="header-right">
-    <div class="progress-label">Skor Sesi Ini</div>
-    <div class="progress-score" id="headerScore">—<span>/100</span></div>
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="header-badge">🎓 Simulasi Instruktur</div>
+    <h1>Instrumen Penilaian<br>Peserta Inklusif / Disabilitas</h1>
+    <p>Latihan penggunaan lembar observasi & pendampingan dalam kegiatan Darul Arqam Dasar (DAD) IMM</p>
+    <div class="header-right">
+      <div class="progress-label">Skor Sesi Ini</div>
+      <div class="progress-score" id="headerScore">—<span>/100</span></div>
+    </div>
   </div>
-</div>
 
-<!-- PROGRESS TRACK -->
-<div class="progress-track">
-  <div class="progress-step active" id="pt0" onclick="jumpTo(0)"></div>
-  <div class="progress-step" id="pt1" onclick="jumpTo(1)"></div>
-  <div class="progress-step" id="pt2" onclick="jumpTo(2)"></div>
-  <div class="progress-step" id="pt3" onclick="jumpTo(3)"></div>
-  <div class="progress-step" id="pt4" onclick="jumpTo(4)"></div>
-  <div class="progress-step" id="pt5" onclick="jumpTo(5)"></div>
-  <span class="progress-label-track" id="progressLabel">Langkah 1 / 6</span>
-</div>
-
-<!-- BODY -->
-<div class="app-body">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="peserta-card">
-      <div class="peserta-card-title">Peserta Simulasi</div>
-      <div class="peserta-avatar">♿</div>
-      <div class="peserta-name">Ahmad Fauzan</div>
-      <div class="peserta-meta">PC IMM Kota Salatiga</div>
-      <div class="peserta-tag">Disabilitas Pendengaran</div>
-    </div>
-
-    <div class="sidebar-section-title">Langkah Simulasi</div>
-
-    <div class="nav-item active" id="nav0" onclick="jumpTo(0)">
-      <div class="nav-dot"></div> Pengenalan & Konteks
-      <span class="nav-check">✓</span>
-    </div>
-    <div class="nav-item" id="nav1" onclick="jumpTo(1)">
-      <div class="nav-dot"></div> Observasi – Materi SPI
-      <span class="nav-check">✓</span>
-    </div>
-    <div class="nav-item" id="nav2" onclick="jumpTo(2)">
-      <div class="nav-dot"></div> Observasi – FGD SPI
-      <span class="nav-check">✓</span>
-    </div>
-    <div class="nav-item" id="nav3" onclick="jumpTo(3)">
-      <div class="nav-dot"></div> Catatan Pendampingan
-      <span class="nav-check">✓</span>
-    </div>
-    <div class="nav-item" id="nav4" onclick="jumpTo(4)">
-      <div class="nav-dot"></div> Uji Pemahaman
-      <span class="nav-check">✓</span>
-    </div>
-    <div class="nav-item" id="nav5" onclick="jumpTo(5)">
-      <div class="nav-dot"></div> Hasil & Rekap Nilai
-      <span class="nav-check">✓</span>
-    </div>
-
-    <div class="sidebar-divider"></div>
-    <div style="padding: 0 20px;">
-      <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase;">Legenda Skor</div>
-      <div style="font-size:12px; color:var(--muted); line-height:1.9;">
-        <span style="color:var(--green);">●</span> 88–100: Sangat Baik<br>
-        <span style="color:var(--blue);">●</span> 76–87: Baik<br>
-        <span style="color:var(--amber);">●</span> 56–75: Cukup<br>
-        <span style="color:var(--red);">●</span> 0–55: Kurang
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main-content">
-
-    <!-- SCENE 0: INTRO -->
-    <div class="scene active" id="scene0">
-      <div class="intro-hero">
-        <div class="intro-icon">♿</div>
-        <h2>Selamat Datang, Instruktur!</h2>
-        <p>Simulasi ini memandu Anda untuk berlatih menggunakan instrumen penilaian peserta disabilitas/inklusif selama kegiatan <strong>Darul Arqam Dasar (DAD)</strong>.</p>
-        <div class="intro-cards">
-          <div class="intro-card">
-            <div class="ico">📋</div>
-            <h4>3 Skenario Nyata</h4>
-            <p>Berlatih observasi di sesi materi, FGD, dan pendampingan harian.</p>
-          </div>
-          <div class="intro-card">
-            <div class="ico">✅</div>
-            <h4>8 Indikator Kunci</h4>
-            <p>5 indikator partisipasi forum + 3 indikator aksesibilitas & akomodasi.</p>
-          </div>
-          <div class="intro-card">
-            <div class="ico">📊</div>
-            <h4>Rekap Otomatis</h4>
-            <p>Nilai dan predikat dihitung otomatis berdasarkan penilaian Anda.</p>
-          </div>
-        </div>
-        <div class="tipbox" style="max-width:580px; margin: 0 auto 24px; text-align:left;">
-          <div class="tipbox-title">⚠️ Profil Peserta Disabilitas</div>
-          <strong>Ahmad Fauzan</strong> adalah peserta DAD dari PC IMM Kota Salatiga yang memiliki <strong>disabilitas pendengaran</strong> (tuli sejak lahir). Ia berkomunikasi menggunakan Bahasa Isyarat Indonesia (Bisindo) dan dibantu oleh seorang interpreter. Ia mampu membaca gerak bibir pada kondisi pencahayaan baik.
-        </div>
-        <button class="btn btn-primary" onclick="goTo(1)">Mulai Simulasi →</button>
-      </div>
-    </div>
-
-    <!-- SCENE 1: OBSERVASI MATERI SPI -->
-    <div class="scene" id="scene1">
-      <div class="step-header">
-        <div class="step-number">1</div>
-        <div>
-          <div class="step-title">Observasi – Materi SPI</div>
-          <div class="step-subtitle">Sesi pagi, Kamis 04 Juni 2026, 08.05–09.35</div>
-        </div>
-      </div>
-
-      <div class="scenario-box">
-        <div class="scenario-tag">Skenario Situasi</div>
-        <p>Ahmad Fauzan duduk di baris kedua, dekat interpreter. Materi <strong>Sistem Perkaderan IMM (SPI)</strong> dibawakan oleh Bpk. Fakhrudin. Interpreter menerjemahkan secara <em>real-time</em>. Ahmad terlihat memperhatikan, namun belum mengangkat tangan untuk bertanya. Ketika pemateri melontarkan pertanyaan pancingan, Ahmad memberikan respons lewat isyarat kepada interpreter yang kemudian menyampaikan ke forum.</p>
-      </div>
-
-      <div class="tipbox">
-        <div class="tipbox-title">📌 Panduan Instruktur</div>
-        Perhatikan secara cermat perilaku peserta selama sesi berlangsung. Beri tanda <strong>✓ Terpenuhi</strong> jika indikator tampak terpenuhi, atau <strong>✗ Tidak</strong> jika tidak. Skor = jumlah indikator terpenuhi × 12,5.
-      </div>
-
-      <!-- Partisipasi Forum -->
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,#EBF0FA,#F7F9FD);">
-          <div class="section-icon" style="background:var(--blue-light);">👁️</div>
-          <h3>A. Indikator Partisipasi dalam Forum</h3>
-          <span class="tag" style="background:var(--blue-light); color:var(--blue);">5 Indikator</span>
-        </div>
-        <div class="indicator-list">
-          <div class="indicator-row" id="s1i1">
-            <div class="indicator-number">1</div>
-            <div class="indicator-text">
-              Hadir tepat waktu
-              <div class="hint">Peserta sudah ada di tempat sebelum sesi dimulai (08.05)</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i1','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i1','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i2">
-            <div class="indicator-number">2</div>
-            <div class="indicator-text">
-              Fokus & memperhatikan dengan baik
-              <div class="hint">Tidak tidur, tidak bermain HP, memandang ke arah interpreter atau pemateri</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i2','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i2','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i3">
-            <div class="indicator-number">3</div>
-            <div class="indicator-text">
-              Bertanya kepada pemateri
-              <div class="hint">Mengajukan pertanyaan secara langsung atau melalui interpreter</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i3','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i3','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i4">
-            <div class="indicator-number">4</div>
-            <div class="indicator-text">
-              Menjawab pertanyaan pemateri
-              <div class="hint">Merespons pertanyaan pemateri via interpreter atau isyarat</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i4','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i4','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i5">
-            <div class="indicator-number">5</div>
-            <div class="indicator-text">
-              Memberikan sanggahan/tanggapan
-              <div class="hint">Aktif merespons pendapat peserta lain atau pemateri</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i5','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i5','no')">✗ Tidak</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aksesibilitas -->
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,#FFF8E7,#FFFBF5);">
-          <div class="section-icon" style="background:var(--amber-light);">♿</div>
-          <h3>B. Indikator Aksesibilitas & Akomodasi</h3>
-          <span class="tag" style="background:var(--amber-light); color:var(--amber);">3 Indikator</span>
-        </div>
-        <div class="indicator-list">
-          <div class="indicator-row" id="s1i6">
-            <div class="indicator-number">6</div>
-            <div class="indicator-text">
-              Media akses tersedia & berfungsi
-              <div class="hint">Interpreter hadir dan aktif, atau alat bantu (teks layar, audio loop) berfungsi</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i6','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i6','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i7">
-            <div class="indicator-number">7</div>
-            <div class="indicator-text">
-              Pendamping/interpreter hadir & aktif membantu
-              <div class="hint">Pendamping berada di posisi yang tepat, responsif terhadap kebutuhan peserta</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i7','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i7','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s1i8">
-            <div class="indicator-number">8</div>
-            <div class="indicator-text">
-              Metode penyampaian diadaptasi
-              <div class="hint">Instruktur berbicara lebih lambat/jelas, materi tersedia teks, posisi tempat duduk diatur</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s1i8','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s1i8','no')">✗ Tidak</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Catatan -->
-      <div style="margin-bottom: 8px;">
-        <label class="catatan-label">📝 Catatan Observasi (opsional)</label>
-        <textarea class="catatan-area" id="s1catatan" placeholder="Contoh: Ahmad aktif memperhatikan interpreter sepanjang sesi, namun belum berani mengajukan pertanyaan secara mandiri..."></textarea>
-      </div>
-
-      <!-- Score display -->
-      <div id="s1scoreBox" style="display:none; margin-top:16px; padding:16px 20px; background:var(--green-light); border-radius:12px; display:flex; align-items:center; gap:12px;">
-        <div style="font-size:13px; color:var(--muted);">Skor Sesi 1:</div>
-        <div id="s1scoreVal" style="font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--green);"></div>
-        <div id="s1predikat"></div>
-      </div>
-
-      <div class="btn-actions">
-        <button class="btn btn-secondary" onclick="goTo(0)">← Kembali</button>
-        <button class="btn btn-primary" onclick="submitScene1()">Simpan & Lanjut →</button>
-      </div>
-      <div class="feedback-box" id="s1feedback"></div>
-    </div>
-
-    <!-- SCENE 2: FGD SPI -->
-    <div class="scene" id="scene2">
-      <div class="step-header">
-        <div class="step-number">2</div>
-        <div>
-          <div class="step-title">Observasi – FGD Materi SPI</div>
-          <div class="step-subtitle">Sesi sore, Kamis 04 Juni 2026</div>
-        </div>
-      </div>
-
-      <div class="scenario-box">
-        <div class="scenario-tag">Skenario Situasi</div>
-        <p>FGD <strong>Sistem Perkaderan IMM (SPI)</strong> berlangsung dalam format kelompok kecil (5 orang). Ahmad berada di kelompok yang sama dengan Daffa' dan Dwita. Interpreter duduk di samping Ahmad. Dalam diskusi, Ahmad <strong>aktif mengangkat tangan</strong> dan menyampaikan pendapat tentang pola rekrutmen kader, terdengar dari interpreter: <em>"Pendapat Ahmad: rekrutmen harus berbasis potensi, bukan latar belakang"</em>. Ia juga menanggapi pendapat Dwita tentang agenda perkaderan.</p>
-      </div>
-
-      <div class="tipbox">
-        <div class="tipbox-title">🔍 Perhatian Khusus FGD</div>
-        Pada sesi FGD, fokus pengamatan lebih pada <strong>kualitas pendapat</strong> yang disampaikan. Catat apakah pendapat bersifat analitis, informatif, atau kurang jelas. Indikator aksesibilitas tetap dinilai.
-      </div>
-
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,#EBF0FA,#F7F9FD);">
-          <div class="section-icon" style="background:var(--blue-light);">💬</div>
-          <h3>A. Indikator Partisipasi FGD</h3>
-          <span class="tag" style="background:var(--blue-light); color:var(--blue);">5 Indikator</span>
-        </div>
-        <div class="indicator-list">
-          <div class="indicator-row" id="s2i1">
-            <div class="indicator-number">1</div>
-            <div class="indicator-text">
-              Hadir & siap dalam kelompok FGD
-              <div class="hint">Hadir di kelompok yang ditentukan sebelum FGD dimulai</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i1','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i1','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i2">
-            <div class="indicator-number">2</div>
-            <div class="indicator-text">
-              Fokus pada jalannya diskusi kelompok
-              <div class="hint">Mengikuti alur diskusi, tidak mengobrol di luar topik</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i2','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i2','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i3">
-            <div class="indicator-number">3</div>
-            <div class="indicator-text">
-              Mengajukan pertanyaan/isu dalam FGD
-              <div class="hint">Memunculkan topik baru atau mempertanyakan argumen peserta lain</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i3','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i3','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i4">
-            <div class="indicator-number">4</div>
-            <div class="indicator-text">
-              Menjawab/merespons pendapat anggota lain
-              <div class="hint">Merespons setidaknya satu pendapat dari rekan diskusi</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i4','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i4','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i5">
-            <div class="indicator-number">5</div>
-            <div class="indicator-text">
-              Menyampaikan pendapat/argumen
-              <div class="hint">Menyampaikan pendapat yang substantif, tidak hanya setuju/tidak setuju</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i5','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i5','no')">✗ Tidak</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,#FFF8E7,#FFFBF5);">
-          <div class="section-icon" style="background:var(--amber-light);">♿</div>
-          <h3>B. Indikator Aksesibilitas & Akomodasi</h3>
-          <span class="tag" style="background:var(--amber-light); color:var(--amber);">3 Indikator</span>
-        </div>
-        <div class="indicator-list">
-          <div class="indicator-row" id="s2i6">
-            <div class="indicator-number">6</div>
-            <div class="indicator-text">
-              Media akses tersedia dalam FGD
-              <div class="hint">Interpreter berada di kelompok yang sama dan posisi duduk memungkinkan komunikasi</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i6','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i6','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i7">
-            <div class="indicator-number">7</div>
-            <div class="indicator-text">
-              Interpreter aktif memfasilitasi diskusi dua arah
-              <div class="hint">Interpreter tidak hanya menerjemahkan dari pemateri, tapi juga menyampaikan pendapat Ahmad ke kelompok</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i7','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i7','no')">✗ Tidak</button>
-            </div>
-          </div>
-          <div class="indicator-row" id="s2i8">
-            <div class="indicator-number">8</div>
-            <div class="indicator-text">
-              Anggota kelompok memberi ruang & waktu cukup
-              <div class="hint">Peserta lain menunggu interpreter selesai berbicara sebelum melanjutkan diskusi</div>
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn" onclick="setIndicator('s2i8','yes')">✓ Terpenuhi</button>
-              <button class="toggle-btn" onclick="setIndicator('s2i8','no')">✗ Tidak</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Kualitas Pendapat -->
-      <div style="margin-bottom:16px;">
-        <label class="catatan-label">🎯 Kualitas Pendapat yang Disampaikan (pilih satu)</label>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="kualitasBtns">
-          <button class="toggle-btn" onclick="selectKualitas('analitis')" id="kb_analitis" style="padding:8px 16px;">🔬 Analitis</button>
-          <button class="toggle-btn" onclick="selectKualitas('informatif')" id="kb_informatif" style="padding:8px 16px;">📊 Informatif</button>
-          <button class="toggle-btn" onclick="selectKualitas('logis')" id="kb_logis" style="padding:8px 16px;">🔗 Logis</button>
-          <button class="toggle-btn" onclick="selectKualitas('naratif')" id="kb_naratif" style="padding:8px 16px;">📖 Naratif</button>
-          <button class="toggle-btn" onclick="selectKualitas('kurangjelas')" id="kb_kurangjelas" style="padding:8px 16px;">❓ Kurang Jelas</button>
-        </div>
-      </div>
-
-      <div style="margin-bottom: 8px;">
-        <label class="catatan-label">📝 Catatan Observasi FGD</label>
-        <textarea class="catatan-area" id="s2catatan" placeholder="Contoh: Ahmad aktif menyampaikan pendapat tentang rekrutmen kader. Interpreter berhasil memfasilitasi diskusi dua arah dengan baik. Beberapa anggota kelompok sudah terbiasa menunggu terjemahan isyarat..."></textarea>
-      </div>
-
-      <div class="btn-actions">
-        <button class="btn btn-secondary" onclick="goTo(1)">← Kembali</button>
-        <button class="btn btn-primary" onclick="submitScene2()">Simpan & Lanjut →</button>
-      </div>
-      <div class="feedback-box" id="s2feedback"></div>
-    </div>
-
-    <!-- SCENE 3: PENDAMPINGAN HARIAN -->
-    <div class="scene" id="scene3">
-      <div class="step-header">
-        <div class="step-number">3</div>
-        <div>
-          <div class="step-title">Catatan Pendampingan Harian</div>
-          <div class="step-subtitle">Hari 2, Kamis 04 Juni 2026 – Rekap Satu Hari</div>
-        </div>
-      </div>
-
-      <div class="scenario-box">
-        <div class="scenario-tag">Skenario Situasi</div>
-        <p>Hari kedua DAD telah selesai. Sebagai instruktur yang juga berperan sebagai observer, Anda perlu mengisi <strong>catatan pendampingan harian</strong>. Berikut kejadian-kejadian yang Anda saksikan hari ini bersama Ahmad: interpreter terlambat hadir 10 menit di sesi pagi; Ahmad mengeluh pusing ringan setelah makan siang; Ahmad berhasil berinteraksi dengan dua peserta lain tanpa bantuan interpreter menggunakan bahasa tubuh; pada sesi FGD, Ahmad terlihat sangat antusias dan berani mengeluarkan pendapat.</p>
-      </div>
-
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,var(--green-light),#fff);">
-          <div class="section-icon" style="background:var(--green-light);">📋</div>
-          <h3>Catatan Pendampingan – Hari 2</h3>
-          <span class="tag" style="background:var(--green-light); color:var(--green);">Harus diisi</span>
-        </div>
-        <div style="padding: 20px 24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-          <div>
-            <label class="catatan-label">Hambatan yang Dialami</label>
-            <textarea class="catatan-area" id="hambatan" style="min-height:80px;" placeholder="Contoh: Interpreter terlambat 10 menit di sesi pagi, Ahmad sempat tertinggal materi awal..."></textarea>
-          </div>
-          <div>
-            <label class="catatan-label">Bentuk Bantuan yang Diberikan</label>
-            <textarea class="catatan-area" id="bantuan" style="min-height:80px;" placeholder="Contoh: Observer menjelaskan ulang poin materi awal kepada Ahmad melalui interpreter, membagikan ringkasan tertulis..."></textarea>
-          </div>
-          <div>
-            <label class="catatan-label">Respons Peserta terhadap Bantuan</label>
-            <textarea class="catatan-area" id="respons" style="min-height:80px;" placeholder="Contoh: Ahmad menerima dengan baik, terlihat lebih tenang setelah mendapat ringkasan tertulis..."></textarea>
-          </div>
-          <div>
-            <label class="catatan-label">Kondisi Kesehatan & Kondisi Umum</label>
-            <textarea class="catatan-area" id="kondisi" style="min-height:80px;" placeholder="Contoh: Mengeluh pusing ringan setelah makan siang, diatasi dengan istirahat sebentar. Kondisi sore hari membaik..."></textarea>
-          </div>
-          <div style="grid-column: 1/-1;">
-            <label class="catatan-label">Perkembangan Positif & Tindak Lanjut</label>
-            <textarea class="catatan-area" id="perkembangan" style="min-height:80px;" placeholder="Contoh: Ahmad mulai percaya diri berinteraksi tanpa interpreter menggunakan bahasa tubuh. Perlu diencourage agar terus berani berpendapat dalam FGD berikutnya..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aspek Penilaian Pendampingan -->
-      <div class="section-card">
-        <div class="section-card-header" style="background: linear-gradient(135deg,var(--purple-light),#fff);">
-          <div class="section-icon" style="background:var(--purple-light);">⭐</div>
-          <h3>Penilaian Aspek Pendampingan (0–100)</h3>
-          <span class="tag" style="background:var(--purple-light); color:var(--purple);">6 Aspek</span>
-        </div>
-        <div style="padding:20px 24px; display:flex; flex-direction:column; gap:16px;">
-          <div id="aspek-rows"></div>
-        </div>
-      </div>
-
-      <div class="btn-actions">
-        <button class="btn btn-secondary" onclick="goTo(2)">← Kembali</button>
-        <button class="btn btn-primary" onclick="submitScene3()">Simpan & Lanjut →</button>
-      </div>
-      <div class="feedback-box" id="s3feedback"></div>
-    </div>
-
-    <!-- SCENE 4: UJI PEMAHAMAN -->
-    <div class="scene" id="scene4">
-      <div class="step-header">
-        <div class="step-number">4</div>
-        <div>
-          <div class="step-title">Uji Pemahaman Instruktur</div>
-          <div class="step-subtitle">5 pertanyaan pilihan ganda tentang penggunaan instrumen</div>
-        </div>
-      </div>
-
-      <div id="quiz-container"></div>
-
-      <div class="btn-actions" id="quiz-actions" style="display:none;">
-        <button class="btn btn-secondary" onclick="goTo(3)">← Kembali</button>
-        <button class="btn btn-primary" onclick="goTo(5)">Lihat Hasil Akhir →</button>
-      </div>
-    </div>
-
-    <!-- SCENE 5: HASIL -->
-    <div class="scene" id="scene5">
-      <div class="step-header">
-        <div class="step-number">✓</div>
-        <div>
-          <div class="step-title">Hasil & Rekapitulasi</div>
-          <div class="step-subtitle">Ringkasan penilaian simulasi Anda</div>
-        </div>
-      </div>
-      <div id="hasilContent"></div>
-    </div>
-
-  </main>
-</div>
-
-<!-- FLOATING TIPS -->
-<div class="tips-float">
-  <div class="tips-panel" id="tipsPanel">
-    <h4>💡 Tips Instruktur</h4>
-    <ul>
-      <li>Amati secara <strong>tidak mencolok</strong> agar peserta tidak merasa diawasi berlebihan.</li>
-      <li>Nilai <strong>proses partisipasi</strong>, bukan hasil akhir – usaha tetap dihargai.</li>
-      <li>Koordinasi dengan interpreter <strong>sebelum sesi</strong> untuk strategi observasi bersama.</li>
-      <li>Jika peserta tampak frustrasi, <strong>catat segera</strong> sebagai hambatan, bukan kesalahan peserta.</li>
-      <li>Skor 0 bukan berarti peserta gagal – bisa jadi akomodasi yang kurang memadai.</li>
-    </ul>
+  <!-- PROGRESS TRACK -->
+  <div class="progress-track">
+    <div class="progress-step active" id="pt0" onclick="jumpTo(0)"></div>
+    <div class="progress-step" id="pt1" onclick="jumpTo(1)"></div>
+    <div class="progress-step" id="pt2" onclick="jumpTo(2)"></div>
+    <div class="progress-step" id="pt3" onclick="jumpTo(3)"></div>
+    <div class="progress-step" id="pt4" onclick="jumpTo(4)"></div>
+    <div class="progress-step" id="pt5" onclick="jumpTo(5)"></div>
+    <span class="progress-label-track" id="progressLabel">Langkah 1 / 6</span>
   </div>
-  <button class="tips-toggle" onclick="toggleTips()">💡</button>
-</div>
 
-<script>
-// ─── STATE ───────────────────────────────────────────
-const state = {
-  scene1: { indicators: {}, catatan: '', score: 0 },
-  scene2: { indicators: {}, catatan: '', kualitas: '', score: 0 },
-  scene3: { aspek: {}, catatan: {} },
-  quiz: { answers: {}, score: 0 },
-  currentScene: 0,
-  completedScenes: new Set([0])
-};
+  <!-- BODY -->
+  <div class="app-body">
 
-// ─── NAVIGATION ──────────────────────────────────────
-function goTo(n) {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
-  document.getElementById(`scene${n}`).classList.add('active');
-  document.getElementById(`nav${n}`).classList.add('active');
-  state.currentScene = n;
-  state.completedScenes.add(n);
-  updateProgressBar();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-function jumpTo(n) { goTo(n); }
-
-function updateProgressBar() {
-  for (let i = 0; i < 6; i++) {
-    const el = document.getElementById(`pt${i}`);
-    el.className = 'progress-step';
-    if (i === state.currentScene) el.classList.add('active');
-    else if (state.completedScenes.has(i)) el.classList.add('done');
-  }
-  document.getElementById('progressLabel').textContent =
-    `Langkah ${state.currentScene + 1} / 6`;
-}
-
-// ─── INDICATORS ──────────────────────────────────────
-function setIndicator(id, val) {
-  const row = document.getElementById(id);
-  const btns = row.querySelectorAll('.toggle-btn');
-  btns[0].className = 'toggle-btn' + (val === 'yes' ? ' yes' : '');
-  btns[1].className = 'toggle-btn' + (val === 'no' ? ' no' : '');
-  row.classList.toggle('fulfilled', val === 'yes');
-  const num = row.querySelector('.indicator-number');
-
-  // Store
-  const scene = id.startsWith('s1') ? 'scene1' : 'scene2';
-  const iNum = id.replace(/s[12]i/, '');
-  state[scene].indicators[iNum] = val;
-  updateSceneScore(scene);
-}
-
-function countIndicators(scene) {
-  const ind = state[scene].indicators;
-  return Object.values(ind).filter(v => v === 'yes').length;
-}
-
-function updateSceneScore(scene) {
-  const count = countIndicators(scene);
-  const score = count * 12.5;
-  state[scene].score = score;
-  return score;
-}
-
-function getPredikat(score) {
-  if (score >= 88) return { label: 'Sangat Baik', cls: 'sangat-baik' };
-  if (score >= 76) return { label: 'Baik', cls: 'baik' };
-  if (score >= 56) return { label: 'Cukup', cls: 'cukup' };
-  return { label: 'Kurang', cls: 'kurang' };
-}
-
-// ─── KUALITAS ─────────────────────────────────────────
-function selectKualitas(val) {
-  document.querySelectorAll('#kualitasBtns .toggle-btn').forEach(b => b.className = 'toggle-btn');
-  document.getElementById(`kb_${val}`).classList.add('yes');
-  state.scene2.kualitas = val;
-}
-
-// ─── SCENE 1 SUBMIT ──────────────────────────────────
-function submitScene1() {
-  const count = countIndicators('scene1');
-  const score = count * 12.5;
-  state.scene1.score = score;
-  state.scene1.catatan = document.getElementById('s1catatan').value;
-
-  const pred = getPredikat(score);
-  const fb = document.getElementById('s1feedback');
-  fb.className = `feedback-box show ${count >= 6 ? 'success' : count >= 4 ? 'warning' : 'info'}`;
-
-  let msg = '';
-  if (count === 8) msg = 'Luar biasa! Semua indikator terpenuhi. Ahmad menunjukkan partisipasi penuh dengan dukungan akomodasi yang sangat baik.';
-  else if (count >= 6) msg = `${count} dari 8 indikator terpenuhi. Partisipasi Ahmad baik. Perhatikan indikator yang belum terpenuhi dan cari akar hambatannya.`;
-  else if (count >= 4) msg = `${count} dari 8 indikator terpenuhi. Ada beberapa area yang perlu ditingkatkan, terutama dukungan akomodasi dan fasilitasi partisipasi aktif.`;
-  else msg = `Hanya ${count} indikator terpenuhi. Evaluasi kembali apakah akomodasi sudah memadai. Ingat: partisipasi rendah seringkali disebabkan kurangnya dukungan, bukan kemampuan peserta.`;
-
-  fb.innerHTML = `
-    <div class="feedback-title">${count >= 6 ? '✅' : count >= 4 ? '⚠️' : 'ℹ️'} Skor: ${score}/100 – ${pred.label}</div>
-    <p>${msg}</p>
-  `;
-
-  document.getElementById('nav0').classList.add('done');
-  document.getElementById('nav1').classList.add('done');
-  document.getElementById('headerScore').innerHTML = `${score.toFixed(0)}<span>/100</span>`;
-
-  setTimeout(() => goTo(2), 1800);
-}
-
-// ─── SCENE 2 SUBMIT ──────────────────────────────────
-function submitScene2() {
-  const count = countIndicators('scene2');
-  const score = count * 12.5;
-  state.scene2.score = score;
-  state.scene2.catatan = document.getElementById('s2catatan').value;
-
-  const pred = getPredikat(score);
-  const fb = document.getElementById('s2feedback');
-  fb.className = `feedback-box show ${count >= 6 ? 'success' : 'warning'}`;
-
-  fb.innerHTML = `
-    <div class="feedback-title">✅ Skor FGD: ${score}/100 – ${pred.label}</div>
-    <p>Kualitas pendapat: <strong>${state.scene2.kualitas || 'belum dipilih'}</strong>. ${count} dari 8 indikator terpenuhi. Catat temuan ini sebagai bahan rekap di akhir kegiatan.</p>
-  `;
-
-  document.getElementById('nav2').classList.add('done');
-  setTimeout(() => goTo(3), 1800);
-}
-
-// ─── ASPEK PENDAMPINGAN ──────────────────────────────
-const aspekList = [
-  'Kehadiran & Ketepatan Waktu',
-  'Keterlibatan dalam Forum/Diskusi',
-  'Kemampuan Berkomunikasi dengan Bantuan',
-  'Respons terhadap Akomodasi',
-  'Kemandirian dalam Kegiatan',
-  'Interaksi dengan Peserta Lain',
-];
-
-function buildAspekRows() {
-  const container = document.getElementById('aspek-rows');
-  container.innerHTML = aspekList.map((asp, i) => `
-    <div style="display:flex; align-items:center; gap:16px; padding:10px 0; border-bottom:1px solid #F3F4F6;">
-      <div style="min-width:200px; font-size:14px; font-weight:500; color:var(--ink);">${asp}</div>
-      <div style="flex:1;">
-        <input type="range" min="0" max="100" step="10" value="60"
-          oninput="updateAspek(${i}, this.value)"
-          style="width:100%; accent-color:var(--green);">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="peserta-card">
+        <div class="peserta-card-title">Peserta Simulasi</div>
+        <div class="peserta-avatar">♿</div>
+        <div class="peserta-name">Ahmad Fauzan</div>
+        <div class="peserta-meta">PC IMM Kota Salatiga</div>
+        <div class="peserta-tag">Disabilitas Pendengaran</div>
       </div>
-      <div id="aspek-val-${i}" style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; color:var(--green); min-width:40px; text-align:right;">60</div>
-    </div>
-  `).join('');
-  aspekList.forEach((_, i) => { state.scene3.aspek[i] = 60; });
-}
 
-function updateAspek(i, val) {
-  document.getElementById(`aspek-val-${i}`).textContent = val;
-  state.scene3.aspek[i] = parseInt(val);
-}
+      <div class="sidebar-section-title">Langkah Simulasi</div>
 
-// ─── SCENE 3 SUBMIT ──────────────────────────────────
-function submitScene3() {
-  const vals = Object.values(state.scene3.aspek);
-  const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
-  const pred = getPredikat(avg);
-
-  const fb = document.getElementById('s3feedback');
-  fb.className = 'feedback-box show success';
-  fb.innerHTML = `
-    <div class="feedback-title">✅ Catatan Pendampingan Tersimpan – Rerata: ${avg.toFixed(1)}/100 – ${pred.label}</div>
-    <p>Data pendampingan harian Anda berhasil direkam. Pastikan catatan ini disampaikan kepada koordinator kegiatan untuk tindak lanjut yang tepat.</p>
-  `;
-
-  document.getElementById('nav3').classList.add('done');
-  setTimeout(() => { buildQuiz(); goTo(4); }, 1800);
-}
-
-// ─── QUIZ ─────────────────────────────────────────────
-const questions = [
-  {
-    q: "Seorang peserta tuli hadir terlambat 5 menit karena menunggu interpreter. Bagaimana Anda menilai indikator 'Hadir Tepat Waktu'?",
-    options: [
-      "Tidak terpenuhi (✗), keterlambatan tetap dicatat apa adanya.",
-      "Terpenuhi (✓), karena keterlambatan disebabkan faktor akomodasi, bukan kesengajaan.",
-      "Diabaikan saja, tidak perlu dinilai.",
-      "Terpenuhi (✓), karena instruktur yang harusnya menjemput.",
-    ],
-    answer: 1,
-    explain: "Benar! Prinsip penilaian inklusif mempertimbangkan konteks. Keterlambatan karena faktor akomodasi (menunggu interpreter) tidak seharusnya merugikan peserta. Catat situasi ini di kolom 'Catatan' untuk tindak lanjut perbaikan sistem."
-  },
-  {
-    q: "Ahmad memberikan pendapat yang sangat analitis dalam FGD, namun interpreter terlambat menyampaikannya sehingga diskusi sudah berpindah topik. Skor yang tepat?",
-    options: [
-      "Indikator 'Menyampaikan Pendapat' tidak terpenuhi karena terlambat.",
-      "Indikator 'Menyampaikan Pendapat' terpenuhi, namun catat hambatan pada indikator aksesibilitas.",
-      "Abaikan pendapat Ahmad karena tidak relevan lagi.",
-      "Beri skor setengah (0,5) untuk indikator tersebut.",
-    ],
-    answer: 1,
-    explain: "Tepat! Ahmad sudah berusaha menyampaikan pendapat (indikator partisipasi terpenuhi). Namun hambatan pada komunikasi tercatat di indikator aksesibilitas – ini bahan evaluasi untuk perbaikan fasilitasi interpreter."
-  },
-  {
-    q: "Berapa skor jika 5 dari 8 indikator terpenuhi?",
-    options: ["50", "60", "62.5", "65"],
-    answer: 2,
-    explain: "5 × 12,5 = 62,5. Setiap indikator bernilai 12,5 poin (100 dibagi 8 indikator). Skor 62,5 masuk kategori Cukup (56–75)."
-  },
-  {
-    q: "Kapan instrumen 'Lembar Pendampingan' sebaiknya diisi?",
-    options: [
-      "Hanya di akhir seluruh kegiatan DAD.",
-      "Setiap hari setelah semua sesi selesai, atau segera setelah kejadian penting.",
-      "Hanya jika peserta mengalami masalah serius.",
-      "Diisi oleh peserta sendiri.",
-    ],
-    answer: 1,
-    explain: "Lembar pendampingan paling akurat jika diisi setiap hari (atau bahkan per kejadian penting). Mencatat setelah lama berselang berisiko kehilangan detail penting yang mempengaruhi tindak lanjut."
-  },
-  {
-    q: "Apa tujuan utama indikator aksesibilitas (indikator 6–8) dalam instrumen ini?",
-    options: [
-      "Menilai kemampuan teknis peserta disabilitas.",
-      "Menghukum instruktur yang tidak menyediakan akomodasi.",
-      "Memastikan lingkungan belajar mendukung partisipasi peserta disabilitas secara setara.",
-      "Hanya formalitas administratif.",
-    ],
-    answer: 2,
-    explain: "Indikator aksesibilitas dirancang untuk mengevaluasi apakah sistem/panitia/instruktur sudah menciptakan lingkungan inklusif. Jika skor aksesibilitas rendah, itu sinyal perbaikan pada sisi penyelenggara, bukan kelemahan peserta."
-  },
-];
-
-let quizState = { answered: {}, score: 0 };
-
-function buildQuiz() {
-  const container = document.getElementById('quiz-container');
-  container.innerHTML = questions.map((q, i) => `
-    <div class="section-card" style="margin-bottom:20px;" id="qcard-${i}">
-      <div class="section-card-header" style="background:linear-gradient(135deg,var(--purple-light),#fff);">
-        <div class="section-icon" style="background:var(--purple-light); color:var(--purple); font-size:14px; font-weight:700;">Q${i+1}</div>
-        <h3 style="font-size:14px; line-height:1.5;">${q.q}</h3>
+      <div class="nav-item active" id="nav0" onclick="jumpTo(0)">
+        <div class="nav-dot"></div> Pengenalan & Konteks
+        <span class="nav-check">✓</span>
       </div>
-      <div style="padding:16px 20px; display:flex; flex-direction:column; gap:10px;">
-        ${q.options.map((opt, j) => `
-          <button onclick="answerQuiz(${i},${j})" id="qopt-${i}-${j}"
-            style="text-align:left; padding:12px 16px; border-radius:10px; border:1.5px solid var(--border);
-                   background:var(--white); cursor:pointer; font-family:'DM Sans',sans-serif;
-                   font-size:13px; color:var(--ink); transition:all .2s;"
-            onmouseover="if(!this.disabled)this.style.borderColor='var(--green)'"
-            onmouseout="if(!this.disabled)this.style.borderColor='var(--border)'">
-            <span style="font-weight:600; margin-right:8px;">${String.fromCharCode(65+j)}.</span>${opt}
-          </button>
-        `).join('')}
-        <div id="qexplain-${i}" style="display:none; padding:12px 16px; border-radius:10px; font-size:13px; line-height:1.7;"></div>
+      <div class="nav-item" id="nav1" onclick="jumpTo(1)">
+        <div class="nav-dot"></div> Observasi – Materi SPI
+        <span class="nav-check">✓</span>
       </div>
-    </div>
-  `).join('');
-}
-
-function answerQuiz(qi, opt) {
-  if (quizState.answered[qi] !== undefined) return;
-  quizState.answered[qi] = opt;
-  const q = questions[qi];
-  const correct = opt === q.answer;
-  if (correct) quizState.score++;
-
-  // Style options
-  q.options.forEach((_, j) => {
-    const btn = document.getElementById(`qopt-${qi}-${j}`);
-    btn.disabled = true;
-    if (j === q.answer) {
-      btn.style.background = 'var(--green-light)';
-      btn.style.borderColor = 'var(--green)';
-      btn.style.color = 'var(--green)';
-    } else if (j === opt && !correct) {
-      btn.style.background = 'var(--red-light)';
-      btn.style.borderColor = 'var(--red)';
-      btn.style.color = 'var(--red)';
-    }
-  });
-
-  // Show explanation
-  const exp = document.getElementById(`qexplain-${qi}`);
-  exp.style.display = 'block';
-  exp.style.background = correct ? 'var(--green-light)' : 'var(--red-light)';
-  exp.style.color = correct ? 'var(--green)' : 'var(--red)';
-  exp.innerHTML = `<strong>${correct ? '✅ Benar!' : '❌ Kurang Tepat.'}</strong> ${q.explain}`;
-
-  state.quiz.score = Math.round((quizState.score / questions.length) * 100);
-  document.getElementById('nav4').classList.add('done');
-
-  if (Object.keys(quizState.answered).length === questions.length) {
-    document.getElementById('quiz-actions').style.display = 'flex';
-  }
-}
-
-// ─── HASIL ───────────────────────────────────────────
-function buildHasil() {
-  const s1 = state.scene1.score;
-  const s2 = state.scene2.score;
-  const aspekVals = Object.values(state.scene3.aspek);
-  const s3avg = aspekVals.length ? Math.round(aspekVals.reduce((a,b)=>a+b,0)/aspekVals.length) : 0;
-  const qScore = state.quiz.score;
-  const finalScore = Math.round((s1 * 0.25) + (s2 * 0.25) + (s3avg * 0.25) + (qScore * 0.25));
-  const pred = getPredikat(finalScore);
-
-  document.getElementById('headerScore').innerHTML = `${finalScore}<span>/100</span>`;
-  document.getElementById('nav5').classList.add('done');
-
-  const hasil = document.getElementById('hasilContent');
-  hasil.innerHTML = `
-    <div class="rekap-grid">
-      <div class="rekap-card">
-        <div class="value">${finalScore}</div>
-        <div class="label">Skor Akhir</div>
-        <div style="margin-top:10px;"><span class="score-badge ${pred.cls}">${pred.label}</span></div>
+      <div class="nav-item" id="nav2" onclick="jumpTo(2)">
+        <div class="nav-dot"></div> Observasi – FGD SPI
+        <span class="nav-check">✓</span>
       </div>
-      <div class="rekap-card">
-        <div class="value" style="color:var(--blue);">${s1}</div>
-        <div class="label">Observasi Materi</div>
+      <div class="nav-item" id="nav3" onclick="jumpTo(3)">
+        <div class="nav-dot"></div> Catatan Pendampingan
+        <span class="nav-check">✓</span>
       </div>
-      <div class="rekap-card">
-        <div class="value" style="color:var(--amber);">${s2}</div>
-        <div class="label">Observasi FGD</div>
+      <div class="nav-item" id="nav4" onclick="jumpTo(4)">
+        <div class="nav-dot"></div> Feedback Simulasi
+        <span class="nav-check">✓</span>
       </div>
-      <div class="rekap-card">
-        <div class="value" style="color:var(--purple);">${qScore}</div>
-        <div class="label">Uji Pemahaman</div>
+      <div class="nav-item" id="nav5" onclick="jumpTo(5)">
+        <div class="nav-dot"></div> Hasil & Rekap Nilai
+        <span class="nav-check">✓</span>
       </div>
-    </div>
 
-    <div class="section-card" style="margin-bottom:20px;">
-      <div class="section-card-header" style="background:linear-gradient(135deg,var(--purple-light),#fff);">
-        <div class="section-icon" style="background:var(--purple-light);">📊</div>
-        <h3>Detail Penilaian per Aspek</h3>
+      <div class="sidebar-divider"></div>
+      <div style="padding: 0 20px;">
+        <div
+          style="font-size:12px; color:var(--muted); margin-bottom:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase;">
+          Legenda Skor</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.9;">
+          <span style="color:var(--green);">●</span> 88–100: Sangat Baik<br>
+          <span style="color:var(--blue);">●</span> 76–87: Baik<br>
+          <span style="color:var(--amber);">●</span> 56–75: Cukup<br>
+          <span style="color:var(--red);">●</span> 0–55: Kurang
+        </div>
       </div>
-      <div>
-        ${[
-          ['Observasi Materi SPI', s1],
-          ['Observasi FGD SPI', s2],
-          ['Pendampingan Harian', s3avg],
-          ['Uji Pemahaman Instruktur', qScore],
-        ].map(([name, score]) => `
-          <div class="materi-result-row">
-            <div class="name">${name}</div>
-            <div class="score-bar-wrap">
-              <div class="score-bar-bg">
-                <div class="score-bar-fill" style="width:${score}%;"></div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- SCENE 0: INTRO -->
+      <div class="scene active" id="scene0">
+        <div class="intro-hero">
+          <div class="intro-icon">♿</div>
+          <h2>Selamat Datang, Instruktur!</h2>
+          <p>Simulasi ini memandu Anda untuk berlatih menggunakan instrumen penilaian peserta disabilitas/inklusif
+            selama kegiatan <strong>Darul Arqam Dasar (DAD)</strong>.</p>
+          <div class="intro-cards">
+            <div class="intro-card">
+              <div class="ico">📋</div>
+              <h4>3 Skenario Nyata</h4>
+              <p>Berlatih observasi di sesi materi, FGD, dan pendampingan harian.</p>
+            </div>
+            <div class="intro-card">
+              <div class="ico">✅</div>
+              <h4>8 Indikator Kunci</h4>
+              <p>5 indikator partisipasi forum + 3 indikator aksesibilitas & akomodasi.</p>
+            </div>
+            <div class="intro-card">
+              <div class="ico">📊</div>
+              <h4>Rekap Otomatis</h4>
+              <p>Nilai dan predikat dihitung otomatis berdasarkan penilaian Anda.</p>
+            </div>
+          </div>
+          <div class="tipbox" style="max-width:580px; margin: 0 auto 24px; text-align:left;">
+            <div class="tipbox-title">⚠️ Profil Peserta Disabilitas</div>
+            <strong>Ahmad Fauzan</strong> adalah peserta DAD dari PC IMM Kota Salatiga yang memiliki <strong>disabilitas
+              pendengaran</strong> (tuli sejak lahir). Ia berkomunikasi menggunakan Bahasa Isyarat Indonesia (Bisindo)
+            dan dibantu oleh seorang interpreter. Ia mampu membaca gerak bibir pada kondisi pencahayaan baik.
+          </div>
+          <button class="btn btn-primary" onclick="goTo(1)">Mulai Simulasi →</button>
+        </div>
+      </div>
+
+      <!-- SCENE 1: OBSERVASI MATERI SPI -->
+      <div class="scene" id="scene1">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div>
+            <div class="step-title">Observasi – Materi SPI</div>
+            <div class="step-subtitle">Sesi pagi, Kamis 04 Juni 2026, 08.05–09.35</div>
+          </div>
+        </div>
+
+        <div class="scenario-box">
+          <div class="scenario-tag">Skenario Situasi</div>
+          <p>Ahmad Fauzan duduk di baris kedua, dekat interpreter. Materi <strong>Sistem Perkaderan IMM (SPI)</strong>
+            dibawakan oleh Bpk. Fakhrudin. Interpreter menerjemahkan secara <em>real-time</em>. Ahmad terlihat
+            memperhatikan, namun belum mengangkat tangan untuk bertanya. Ketika pemateri melontarkan pertanyaan
+            pancingan, Ahmad memberikan respons lewat isyarat kepada interpreter yang kemudian menyampaikan ke forum.
+          </p>
+        </div>
+
+        <div class="tipbox">
+          <div class="tipbox-title">📌 Panduan Instruktur</div>
+          Perhatikan secara cermat perilaku peserta selama sesi berlangsung. Beri tanda <strong>✓ Terpenuhi</strong>
+          jika indikator tampak terpenuhi, atau <strong>✗ Tidak</strong> jika tidak. Skor = jumlah indikator terpenuhi ×
+          12,5.
+        </div>
+
+        <!-- Partisipasi Forum -->
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,#EBF0FA,#F7F9FD);">
+            <div class="section-icon" style="background:var(--blue-light);">👁️</div>
+            <h3>A. Indikator Partisipasi dalam Forum</h3>
+            <span class="tag" style="background:var(--blue-light); color:var(--blue);">5 Indikator</span>
+          </div>
+          <div class="indicator-list">
+            <div class="indicator-row" id="s1i1">
+              <div class="indicator-number">1</div>
+              <div class="indicator-text">
+                Hadir tepat waktu
+                <div class="hint">Peserta sudah ada di tempat sebelum sesi dimulai (08.05)</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i1','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i1','no')">✗ Tidak</button>
               </div>
             </div>
-            <div class="score-num">${score}</div>
+            <div class="indicator-row" id="s1i2">
+              <div class="indicator-number">2</div>
+              <div class="indicator-text">
+                Fokus & memperhatikan dengan baik
+                <div class="hint">Tidak tidur, tidak bermain HP, memandang ke arah interpreter atau pemateri</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i2','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i2','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s1i3">
+              <div class="indicator-number">3</div>
+              <div class="indicator-text">
+                Bertanya kepada pemateri
+                <div class="hint">Mengajukan pertanyaan secara langsung atau melalui interpreter</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i3','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i3','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s1i4">
+              <div class="indicator-number">4</div>
+              <div class="indicator-text">
+                Menjawab pertanyaan pemateri
+                <div class="hint">Merespons pertanyaan pemateri via interpreter atau isyarat</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i4','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i4','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s1i5">
+              <div class="indicator-number">5</div>
+              <div class="indicator-text">
+                Memberikan sanggahan/tanggapan
+                <div class="hint">Aktif merespons pendapat peserta lain atau pemateri</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i5','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i5','no')">✗ Tidak</button>
+              </div>
+            </div>
           </div>
-        `).join('')}
+        </div>
+
+        <!-- Aksesibilitas -->
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,#FFF8E7,#FFFBF5);">
+            <div class="section-icon" style="background:var(--amber-light);">♿</div>
+            <h3>B. Indikator Aksesibilitas & Akomodasi</h3>
+            <span class="tag" style="background:var(--amber-light); color:var(--amber);">3 Indikator</span>
+          </div>
+          <div class="indicator-list">
+            <div class="indicator-row" id="s1i6">
+              <div class="indicator-number">6</div>
+              <div class="indicator-text">
+                Media akses tersedia & berfungsi
+                <div class="hint">Interpreter hadir dan aktif, atau alat bantu (teks layar, audio loop) berfungsi</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i6','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i6','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s1i7">
+              <div class="indicator-number">7</div>
+              <div class="indicator-text">
+                Pendamping/interpreter hadir & aktif membantu
+                <div class="hint">Pendamping berada di posisi yang tepat, responsif terhadap kebutuhan peserta</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i7','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i7','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s1i8">
+              <div class="indicator-number">8</div>
+              <div class="indicator-text">
+                Metode penyampaian diadaptasi
+                <div class="hint">Instruktur berbicara lebih lambat/jelas, materi tersedia teks, posisi tempat duduk
+                  diatur</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s1i8','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s1i8','no')">✗ Tidak</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catatan -->
+        <div style="margin-bottom: 8px;">
+          <label class="catatan-label">📝 Catatan Observasi (opsional)</label>
+          <textarea class="catatan-area" id="s1catatan"
+            placeholder="Contoh: Ahmad aktif memperhatikan interpreter sepanjang sesi, namun belum berani mengajukan pertanyaan secara mandiri..."></textarea>
+        </div>
+
+        <!-- Score display -->
+        <div id="s1scoreBox"
+          style="display:none; margin-top:16px; padding:16px 20px; background:var(--green-light); border-radius:12px; display:flex; align-items:center; gap:12px;">
+          <div style="font-size:13px; color:var(--muted);">Skor Sesi 1:</div>
+          <div id="s1scoreVal"
+            style="font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--green);"></div>
+          <div id="s1predikat"></div>
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn btn-secondary" onclick="goTo(0)">← Kembali</button>
+          <button class="btn btn-primary" onclick="submitScene1()">Simpan & Lanjut →</button>
+        </div>
+        <div class="feedback-box" id="s1feedback"></div>
       </div>
-    </div>
 
-    <div class="feedback-box show ${finalScore >= 76 ? 'success' : 'warning'}" style="display:block;">
-      <div class="feedback-title">${finalScore >= 76 ? '🎉 Selamat!' : '📚 Perlu Peningkatan'} – ${pred.label} (${finalScore}/100)</div>
-      <p>${finalScore >= 88
-        ? 'Anda menunjukkan pemahaman yang sangat baik tentang penggunaan instrumen penilaian inklusif. Anda siap untuk mengobservasi peserta disabilitas dalam kegiatan DAD sesungguhnya!'
-        : finalScore >= 76
-        ? 'Pemahaman Anda sudah baik. Pastikan untuk memperhatikan kembali indikator aksesibilitas dan cara pencatatan hambatan peserta secara objektif.'
-        : 'Anda perlu memperdalam pemahaman tentang prinsip penilaian inklusif. Pelajari kembali perbedaan antara hambatan partisipasi dan ketidakmampuan peserta. Ulangi simulasi ini untuk meningkatkan skor.'
-      }</p>
-    </div>
+      <!-- SCENE 2: FGD SPI -->
+      <div class="scene" id="scene2">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div>
+            <div class="step-title">Observasi – FGD Materi SPI</div>
+            <div class="step-subtitle">Sesi sore, Kamis 04 Juni 2026</div>
+          </div>
+        </div>
 
-    <div class="tipbox" style="margin-top:20px;">
-      <div class="tipbox-title">📌 Prinsip Utama yang Harus Diingat</div>
-      <ol style="padding-left:18px; line-height:2;">
-        <li>Nilai <strong>konteks</strong>, bukan hanya perilaku mentah – pertimbangkan apakah hambatan ada pada peserta atau pada sistem.</li>
-        <li>Indikator aksesibilitas adalah tanggung jawab <strong>penyelenggara</strong>, bukan peserta.</li>
-        <li>Catat catatan pendampingan <strong>segera</strong> setelah kejadian, jangan ditunda.</li>
-        <li>Komunikasikan temuan kepada <strong>tim panitia</strong> untuk perbaikan berkelanjutan.</li>
-        <li>Instrumen ini adalah alat bantu – gunakan dengan <strong>empati dan kebijaksanaan</strong>.</li>
-      </ol>
-    </div>
+        <div class="scenario-box">
+          <div class="scenario-tag">Skenario Situasi</div>
+          <p>FGD <strong>Sistem Perkaderan IMM (SPI)</strong> berlangsung dalam format kelompok kecil (5 orang). Ahmad
+            berada di kelompok yang sama dengan Daffa' dan Dwita. Interpreter duduk di samping Ahmad. Dalam diskusi,
+            Ahmad <strong>aktif mengangkat tangan</strong> dan menyampaikan pendapat tentang pola rekrutmen kader,
+            terdengar dari interpreter: <em>"Pendapat Ahmad: rekrutmen harus berbasis potensi, bukan latar
+              belakang"</em>. Ia juga menanggapi pendapat Dwita tentang agenda perkaderan.</p>
+        </div>
 
-    <div class="btn-actions">
-      <button class="btn btn-secondary" onclick="resetAll()">🔄 Ulangi Simulasi</button>
-      <button class="btn btn-amber" onclick="printResult()">🖨️ Cetak Hasil</button>
+        <div class="tipbox">
+          <div class="tipbox-title">🔍 Perhatian Khusus FGD</div>
+          Pada sesi FGD, fokus pengamatan lebih pada <strong>kualitas pendapat</strong> yang disampaikan. Catat apakah
+          pendapat bersifat analitis, informatif, atau kurang jelas. Indikator aksesibilitas tetap dinilai.
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,#EBF0FA,#F7F9FD);">
+            <div class="section-icon" style="background:var(--blue-light);">💬</div>
+            <h3>A. Indikator Partisipasi FGD</h3>
+            <span class="tag" style="background:var(--blue-light); color:var(--blue);">5 Indikator</span>
+          </div>
+          <div class="indicator-list">
+            <div class="indicator-row" id="s2i1">
+              <div class="indicator-number">1</div>
+              <div class="indicator-text">
+                Hadir & siap dalam kelompok FGD
+                <div class="hint">Hadir di kelompok yang ditentukan sebelum FGD dimulai</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i1','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i1','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i2">
+              <div class="indicator-number">2</div>
+              <div class="indicator-text">
+                Fokus pada jalannya diskusi kelompok
+                <div class="hint">Mengikuti alur diskusi, tidak mengobrol di luar topik</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i2','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i2','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i3">
+              <div class="indicator-number">3</div>
+              <div class="indicator-text">
+                Mengajukan pertanyaan/isu dalam FGD
+                <div class="hint">Memunculkan topik baru atau mempertanyakan argumen peserta lain</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i3','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i3','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i4">
+              <div class="indicator-number">4</div>
+              <div class="indicator-text">
+                Menjawab/merespons pendapat anggota lain
+                <div class="hint">Merespons setidaknya satu pendapat dari rekan diskusi</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i4','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i4','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i5">
+              <div class="indicator-number">5</div>
+              <div class="indicator-text">
+                Menyampaikan pendapat/argumen
+                <div class="hint">Menyampaikan pendapat yang substantif, tidak hanya setuju/tidak setuju</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i5','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i5','no')">✗ Tidak</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,#FFF8E7,#FFFBF5);">
+            <div class="section-icon" style="background:var(--amber-light);">♿</div>
+            <h3>B. Indikator Aksesibilitas & Akomodasi</h3>
+            <span class="tag" style="background:var(--amber-light); color:var(--amber);">3 Indikator</span>
+          </div>
+          <div class="indicator-list">
+            <div class="indicator-row" id="s2i6">
+              <div class="indicator-number">6</div>
+              <div class="indicator-text">
+                Media akses tersedia dalam FGD
+                <div class="hint">Interpreter berada di kelompok yang sama dan posisi duduk memungkinkan komunikasi
+                </div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i6','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i6','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i7">
+              <div class="indicator-number">7</div>
+              <div class="indicator-text">
+                Interpreter aktif memfasilitasi diskusi dua arah
+                <div class="hint">Interpreter tidak hanya menerjemahkan dari pemateri, tapi juga menyampaikan pendapat
+                  Ahmad ke kelompok</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i7','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i7','no')">✗ Tidak</button>
+              </div>
+            </div>
+            <div class="indicator-row" id="s2i8">
+              <div class="indicator-number">8</div>
+              <div class="indicator-text">
+                Anggota kelompok memberi ruang & waktu cukup
+                <div class="hint">Peserta lain menunggu interpreter selesai berbicara sebelum melanjutkan diskusi</div>
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn" onclick="setIndicator('s2i8','yes')">✓ Terpenuhi</button>
+                <button class="toggle-btn" onclick="setIndicator('s2i8','no')">✗ Tidak</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kualitas Pendapat -->
+        <div style="margin-bottom:16px;">
+          <label class="catatan-label">🎯 Kualitas Pendapat yang Disampaikan (pilih satu)</label>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="kualitasBtns">
+            <button class="toggle-btn" onclick="selectKualitas('analitis')" id="kb_analitis"
+              style="padding:8px 16px;">🔬 Analitis</button>
+            <button class="toggle-btn" onclick="selectKualitas('informatif')" id="kb_informatif"
+              style="padding:8px 16px;">📊 Informatif</button>
+            <button class="toggle-btn" onclick="selectKualitas('logis')" id="kb_logis" style="padding:8px 16px;">🔗
+              Logis</button>
+            <button class="toggle-btn" onclick="selectKualitas('naratif')" id="kb_naratif" style="padding:8px 16px;">📖
+              Naratif</button>
+            <button class="toggle-btn" onclick="selectKualitas('kurangjelas')" id="kb_kurangjelas"
+              style="padding:8px 16px;">❓ Kurang Jelas</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 8px;">
+          <label class="catatan-label">📝 Catatan Observasi FGD</label>
+          <textarea class="catatan-area" id="s2catatan"
+            placeholder="Contoh: Ahmad aktif menyampaikan pendapat tentang rekrutmen kader. Interpreter berhasil memfasilitasi diskusi dua arah dengan baik. Beberapa anggota kelompok sudah terbiasa menunggu terjemahan isyarat..."></textarea>
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn btn-secondary" onclick="goTo(1)">← Kembali</button>
+          <button class="btn btn-primary" onclick="submitScene2()">Simpan & Lanjut →</button>
+        </div>
+        <div class="feedback-box" id="s2feedback"></div>
+      </div>
+
+      <!-- SCENE 3: PENDAMPINGAN HARIAN -->
+      <div class="scene" id="scene3">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div>
+            <div class="step-title">Catatan Pendampingan Harian</div>
+            <div class="step-subtitle">Hari 2, Kamis 04 Juni 2026 – Rekap Satu Hari</div>
+          </div>
+        </div>
+
+        <div class="scenario-box">
+          <div class="scenario-tag">Skenario Situasi</div>
+          <p>Hari kedua DAD telah selesai. Sebagai instruktur yang juga berperan sebagai observer, Anda perlu mengisi
+            <strong>catatan pendampingan harian</strong>. Berikut kejadian-kejadian yang Anda saksikan hari ini bersama
+            Ahmad: interpreter terlambat hadir 10 menit di sesi pagi; Ahmad mengeluh pusing ringan setelah makan siang;
+            Ahmad berhasil berinteraksi dengan dua peserta lain tanpa bantuan interpreter menggunakan bahasa tubuh; pada
+            sesi FGD, Ahmad terlihat sangat antusias dan berani mengeluarkan pendapat.</p>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,var(--green-light),#fff);">
+            <div class="section-icon" style="background:var(--green-light);">📋</div>
+            <h3>Catatan Pendampingan – Hari 2</h3>
+            <span class="tag" style="background:var(--green-light); color:var(--green);">Harus diisi</span>
+          </div>
+          <div style="padding: 20px 24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div>
+              <label class="catatan-label">Hambatan yang Dialami</label>
+              <textarea class="catatan-area" id="hambatan" style="min-height:80px;"
+                placeholder="Contoh: Interpreter terlambat 10 menit di sesi pagi, Ahmad sempat tertinggal materi awal..."></textarea>
+            </div>
+            <div>
+              <label class="catatan-label">Bentuk Bantuan yang Diberikan</label>
+              <textarea class="catatan-area" id="bantuan" style="min-height:80px;"
+                placeholder="Contoh: Observer menjelaskan ulang poin materi awal kepada Ahmad melalui interpreter, membagikan ringkasan tertulis..."></textarea>
+            </div>
+            <div>
+              <label class="catatan-label">Respons Peserta terhadap Bantuan</label>
+              <textarea class="catatan-area" id="respons" style="min-height:80px;"
+                placeholder="Contoh: Ahmad menerima dengan baik, terlihat lebih tenang setelah mendapat ringkasan tertulis..."></textarea>
+            </div>
+            <div>
+              <label class="catatan-label">Kondisi Kesehatan & Kondisi Umum</label>
+              <textarea class="catatan-area" id="kondisi" style="min-height:80px;"
+                placeholder="Contoh: Mengeluh pusing ringan setelah makan siang, diatasi dengan istirahat sebentar. Kondisi sore hari membaik..."></textarea>
+            </div>
+            <div style="grid-column: 1/-1;">
+              <label class="catatan-label">Perkembangan Positif & Tindak Lanjut</label>
+              <textarea class="catatan-area" id="perkembangan" style="min-height:80px;"
+                placeholder="Contoh: Ahmad mulai percaya diri berinteraksi tanpa interpreter menggunakan bahasa tubuh. Perlu diencourage agar terus berani berpendapat dalam FGD berikutnya..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aspek Penilaian Pendampingan -->
+        <div class="section-card">
+          <div class="section-card-header" style="background: linear-gradient(135deg,var(--purple-light),#fff);">
+            <div class="section-icon" style="background:var(--purple-light);">⭐</div>
+            <h3>Penilaian Aspek Pendampingan (0–100)</h3>
+            <span class="tag" style="background:var(--purple-light); color:var(--purple);">6 Aspek</span>
+          </div>
+          <div style="padding:20px 24px; display:flex; flex-direction:column; gap:16px;">
+            <div id="aspek-rows"></div>
+          </div>
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn btn-secondary" onclick="goTo(2)">← Kembali</button>
+          <button class="btn btn-primary" onclick="submitScene3()">Simpan & Lanjut →</button>
+        </div>
+        <div class="feedback-box" id="s3feedback"></div>
+      </div>
+
+      <!-- SCENE 4: FEEDBACK SIMULASI -->
+      <div class="scene" id="scene4">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div>
+            <div class="step-title">Feedback Simulasi</div>
+            <div class="step-subtitle">Bantu kami meningkatkan kualitas simulasi instrumen penilaian ini</div>
+          </div>
+        </div>
+
+        <div class="tipbox">
+          <div class="tipbox-title">📋 Panduan Pengisian</div>
+          Formulir ini bertujuan mengumpulkan masukan dari Anda selaku instruktur terkait pengalaman menggunakan simulasi website ini. Jawaban Anda sangat membantu pengembangan instrumen ke depannya.
+        </div>
+
+        <!-- BAGIAN A: PENILAIAN KEGUNAAN -->
+        <div class="fb-form-section">
+          <div class="fb-form-header" style="background: linear-gradient(135deg, var(--blue-light), #F7F9FD);">
+            <div class="section-icon" style="background:var(--blue-light);">⭐</div>
+            <h3 style="font-size:15px; font-weight:600; color:var(--ink); flex:1;">A. Penilaian Kegunaan Simulasi</h3>
+            <span class="tag" style="background:var(--blue-light); color:var(--blue); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; padding:3px 10px; border-radius:20px;">Skala Likert</span>
+          </div>
+          <div class="fb-form-body">
+
+            <div class="likert-group">
+              <div class="likert-label">1. Simulasi ini membantu saya <strong>memahami cara penggunaan instrumen penilaian peserta disabilitas</strong> dengan lebih baik.</div>
+              <div class="likert-scale" id="lk1">
+                <button class="likert-btn" onclick="setLikert('lk1',1,this)">1<br><span style="font-size:10px">Sangat Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk1',2,this)">2<br><span style="font-size:10px">Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk1',3,this)">3<br><span style="font-size:10px">Netral</span></button>
+                <button class="likert-btn" onclick="setLikert('lk1',4,this)">4<br><span style="font-size:10px">Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk1',5,this)">5<br><span style="font-size:10px">Sangat Setuju</span></button>
+              </div>
+            </div>
+
+            <div class="likert-group">
+              <div class="likert-label">2. Skenario yang disajikan dalam simulasi <strong>terasa realistis dan relevan</strong> dengan kondisi lapangan yang sesungguhnya.</div>
+              <div class="likert-scale" id="lk2">
+                <button class="likert-btn" onclick="setLikert('lk2',1,this)">1<br><span style="font-size:10px">Sangat Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk2',2,this)">2<br><span style="font-size:10px">Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk2',3,this)">3<br><span style="font-size:10px">Netral</span></button>
+                <button class="likert-btn" onclick="setLikert('lk2',4,this)">4<br><span style="font-size:10px">Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk2',5,this)">5<br><span style="font-size:10px">Sangat Setuju</span></button>
+              </div>
+            </div>
+
+            <div class="likert-group">
+              <div class="likert-label">3. Tampilan dan alur navigasi simulasi ini <strong>mudah dipahami dan digunakan</strong>.</div>
+              <div class="likert-scale" id="lk3">
+                <button class="likert-btn" onclick="setLikert('lk3',1,this)">1<br><span style="font-size:10px">Sangat Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk3',2,this)">2<br><span style="font-size:10px">Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk3',3,this)">3<br><span style="font-size:10px">Netral</span></button>
+                <button class="likert-btn" onclick="setLikert('lk3',4,this)">4<br><span style="font-size:10px">Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk3',5,this)">5<br><span style="font-size:10px">Sangat Setuju</span></button>
+              </div>
+            </div>
+
+            <div class="likert-group">
+              <div class="likert-label">4. Instrumen penilaian yang dilatihkan dalam simulasi ini <strong>layak diterapkan dalam kegiatan DAD IMM</strong> secara nyata.</div>
+              <div class="likert-scale" id="lk4">
+                <button class="likert-btn" onclick="setLikert('lk4',1,this)">1<br><span style="font-size:10px">Sangat Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk4',2,this)">2<br><span style="font-size:10px">Tidak Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk4',3,this)">3<br><span style="font-size:10px">Netral</span></button>
+                <button class="likert-btn" onclick="setLikert('lk4',4,this)">4<br><span style="font-size:10px">Setuju</span></button>
+                <button class="likert-btn" onclick="setLikert('lk4',5,this)">5<br><span style="font-size:10px">Sangat Setuju</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BAGIAN B: ASPEK YANG PALING MEMBANTU -->
+        <div class="fb-form-section">
+          <div class="fb-form-header" style="background: linear-gradient(135deg, var(--green-light), #fff);">
+            <div class="section-icon" style="background:var(--green-light);">✅</div>
+            <h3 style="font-size:15px; font-weight:600; color:var(--ink); flex:1;">B. Aspek Simulasi yang Paling Membantu</h3>
+            <span class="tag" style="background:var(--green-light); color:var(--green); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; padding:3px 10px; border-radius:20px;">Pilih semua yang sesuai</span>
+          </div>
+          <div class="fb-form-body">
+            <div class="checkbox-group" id="checkboxGroup">
+              <label class="checkbox-item" onclick="toggleCheck(this,'skenario')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Skenario situasi</strong> – Narasi kasus Ahmad Fauzan yang realistis membantu memahami konteks penilaian.</div>
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this,'indikator')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Indikator terstruktur</strong> – Daftar indikator partisipasi dan aksesibilitas yang jelas dan terukur.</div>
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this,'catatan')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Kolom catatan observasi</strong> – Ruang untuk mendokumentasikan temuan secara naratif.</div>
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this,'pendampingan')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Formulir pendampingan harian</strong> – Membantu memahami aspek-aspek yang perlu dicatat setiap hari.</div>
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this,'rekap')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Rekapitulasi otomatis</strong> – Skor dan predikat yang langsung terhitung memudahkan evaluasi.</div>
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this,'panduan')">
+                <div class="checkbox-box">✓</div>
+                <div class="checkbox-text"><strong>Panduan & tips instruktur</strong> – Kotak panduan di setiap langkah membantu memahami cara penilaian yang tepat.</div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- BAGIAN C: KESULITAN DAN SARAN -->
+        <div class="fb-form-section">
+          <div class="fb-form-header" style="background: linear-gradient(135deg, var(--amber-light), #FFFBF5);">
+            <div class="section-icon" style="background:var(--amber-light);">💬</div>
+            <h3 style="font-size:15px; font-weight:600; color:var(--ink); flex:1;">C. Masukan & Saran Pengembangan</h3>
+          </div>
+          <div class="fb-form-body">
+
+            <div class="form-field">
+              <label for="fbKesulitan">Bagian mana dari simulasi ini yang <strong>terasa sulit atau membingungkan</strong>?</label>
+              <textarea class="catatan-area form-input" id="fbKesulitan" style="min-height:80px;" placeholder="Contoh: Saya merasa indikator 6–8 kurang jelas perbedaannya dengan indikator 1–5. Atau: alur navigasi antar sesi agak membingungkan..."></textarea>
+            </div>
+
+            <div class="form-field">
+              <label for="fbSaran">Apa saran Anda untuk <strong>meningkatkan kualitas simulasi</strong> ini ke depannya?</label>
+              <textarea class="catatan-area form-input" id="fbSaran" style="min-height:80px;" placeholder="Contoh: Tambahkan video ilustrasi skenario, atau sediakan variasi skenario untuk jenis disabilitas berbeda (fisik, netra, dll.)..."></textarea>
+            </div>
+
+            <div class="form-field">
+              <label for="fbKesiapan">Setelah mengikuti simulasi ini, apakah Anda merasa <strong>siap menggunakan instrumen ini di DAD sesungguhnya</strong>? Jelaskan singkat.</label>
+              <textarea class="catatan-area form-input" id="fbKesiapan" style="min-height:80px;" placeholder="Contoh: Ya, saya merasa lebih percaya diri setelah memahami cara menilai partisipasi tanpa bias terhadap peserta disabilitas..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BAGIAN D: PENILAIAN KESELURUHAN -->
+        <div class="fb-form-section">
+          <div class="fb-form-header" style="background: linear-gradient(135deg, var(--purple-light), #fff);">
+            <div class="section-icon" style="background:var(--purple-light);">🌟</div>
+            <h3 style="font-size:15px; font-weight:600; color:var(--ink); flex:1;">D. Penilaian Keseluruhan Simulasi</h3>
+          </div>
+          <div class="fb-form-body">
+            <div class="form-field">
+              <label>Berikan rating keseluruhan untuk simulasi website ini:</label>
+              <div class="star-rating" id="starRating">
+                <button class="star-btn" onclick="setStars(1)" id="star1">★</button>
+                <button class="star-btn" onclick="setStars(2)" id="star2">★</button>
+                <button class="star-btn" onclick="setStars(3)" id="star3">★</button>
+                <button class="star-btn" onclick="setStars(4)" id="star4">★</button>
+                <button class="star-btn" onclick="setStars(5)" id="star5">★</button>
+              </div>
+              <div id="starLabel" style="font-size:13px; color:var(--muted); margin-top:4px;">Klik bintang untuk memberi penilaian</div>
+            </div>
+
+            <div class="form-field">
+              <label for="fbNama">Nama Instruktur (opsional)</label>
+              <input type="text" class="form-input" id="fbNama" placeholder="Nama Anda...">
+            </div>
+
+            <div class="form-field">
+              <label for="fbInstansi">Asal PC/DPD IMM (opsional)</label>
+              <input type="text" class="form-input" id="fbInstansi" placeholder="Contoh: PC IMM Kota Salatiga">
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-box" id="s4feedback"></div>
+
+        <div class="btn-actions">
+          <button class="btn btn-secondary" onclick="goTo(3)">← Kembali</button>
+          <button class="btn btn-primary" id="btnSubmitFeedback" onclick="submitFeedback()">Kirim Feedback & Lihat Hasil →</button>
+        </div>
+      </div>
+
+      <!-- SCENE 5: HASIL -->
+      <div class="scene" id="scene5">
+        <div class="step-header">
+          <div class="step-number">✓</div>
+          <div>
+            <div class="step-title">Hasil & Rekapitulasi</div>
+            <div class="step-subtitle">Ringkasan penilaian simulasi Anda</div>
+          </div>
+        </div>
+        <div id="hasilContent"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- FLOATING TIPS -->
+  <div class="tips-float">
+    <div class="tips-panel" id="tipsPanel">
+      <h4>💡 Tips Instruktur</h4>
+      <ul>
+        <li>Amati secara <strong>tidak mencolok</strong> agar peserta tidak merasa diawasi berlebihan.</li>
+        <li>Nilai <strong>proses partisipasi</strong>, bukan hasil akhir – usaha tetap dihargai.</li>
+        <li>Koordinasi dengan interpreter <strong>sebelum sesi</strong> untuk strategi observasi bersama.</li>
+        <li>Jika peserta tampak frustrasi, <strong>catat segera</strong> sebagai hambatan, bukan kesalahan peserta.</li>
+        <li>Skor 0 bukan berarti peserta gagal – bisa jadi akomodasi yang kurang memadai.</li>
+      </ul>
     </div>
+    <button class="tips-toggle" onclick="toggleTips()">💡</button>
+  </div>
+
+  <script>
+    // ─── STATE ───────────────────────────────────────────
+    const state = {
+      scene1: { indicators: {}, catatan: '', score: 0 },
+      scene2: { indicators: {}, catatan: '', kualitas: '', score: 0 },
+      scene3: { aspek: {}, catatan: {} },
+      currentScene: 0,
+      completedScenes: new Set([0])
+    };
+
+    // ─── NAVIGATION ──────────────────────────────────────
+    function goTo(n) {
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+      document.getElementById(`scene${n}`).classList.add('active');
+      document.getElementById(`nav${n}`).classList.add('active');
+      state.currentScene = n;
+      state.completedScenes.add(n);
+      updateProgressBar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function jumpTo(n) { goTo(n); }
+
+    function updateProgressBar() {
+      for (let i = 0; i < 6; i++) {
+        const el = document.getElementById(`pt${i}`);
+        el.className = 'progress-step';
+        if (i === state.currentScene) el.classList.add('active');
+        else if (state.completedScenes.has(i)) el.classList.add('done');
+      }
+      document.getElementById('progressLabel').textContent =
+        `Langkah ${state.currentScene + 1} / 6`;
+    }
+
+    // ─── INDICATORS ──────────────────────────────────────
+    function setIndicator(id, val) {
+      const row = document.getElementById(id);
+      const btns = row.querySelectorAll('.toggle-btn');
+      btns[0].className = 'toggle-btn' + (val === 'yes' ? ' yes' : '');
+      btns[1].className = 'toggle-btn' + (val === 'no' ? ' no' : '');
+      row.classList.toggle('fulfilled', val === 'yes');
+      
+      const scene = id.startsWith('s1') ? 'scene1' : 'scene2';
+      const iNum = id.replace(/s[12]i/, '');
+      state[scene].indicators[iNum] = val;
+      updateSceneScore(scene);
+    }
+
+    function countIndicators(scene) {
+      const ind = state[scene].indicators;
+      return Object.values(ind).filter(v => v === 'yes').length;
+    }
+
+    function updateSceneScore(scene) {
+      const count = countIndicators(scene);
+      const score = count * 12.5;
+      state[scene].score = score;
+      return score;
+    }
+
+    function getPredikat(score) {
+      if (score >= 88) return { label: 'Sangat Baik', cls: 'sangat-baik' };
+      if (score >= 76) return { label: 'Baik', cls: 'baik' };
+      if (score >= 56) return { label: 'Cukup', cls: 'cukup' };
+      return { label: 'Kurang', cls: 'kurang' };
+    }
+
+    // ─── KUALITAS ─────────────────────────────────────────
+    function selectKualitas(val) {
+      document.querySelectorAll('#kualitasBtns .toggle-btn').forEach(b => b.className = 'toggle-btn');
+      document.getElementById(`kb_${val}`).classList.add('yes');
+      state.scene2.kualitas = val;
+    }
+
+    // ─── SCENE 1 SUBMIT ──────────────────────────────────
+    function submitScene1() {
+      const count = countIndicators('scene1');
+      const score = count * 12.5;
+      state.scene1.score = score;
+      state.scene1.catatan = document.getElementById('s1catatan').value;
+
+      const pred = getPredikat(score);
+      const fb = document.getElementById('s1feedback');
+      fb.className = `feedback-box show ${count >= 6 ? 'success' : count >= 4 ? 'warning' : 'info'}`;
+
+      fb.innerHTML = `
+    <div class="feedback-title">${count >= 6 ? '✅' : count >= 4 ? '⚠️' : 'ℹ️'} Skor: ${score}/100 – ${pred.label}</div>
+    <p>${count === 8 ? 'Luar biasa! Semua indikator terpenuhi.' : count >= 6 ? 'Partisipasi baik.' : 'Perlu peningkatan.'}</p>
   `;
-}
 
-// ─── TIPS FLOAT ───────────────────────────────────────
-function toggleTips() {
-  document.getElementById('tipsPanel').classList.toggle('open');
-}
+      document.getElementById('nav0').classList.add('done');
+      document.getElementById('nav1').classList.add('done');
+      document.getElementById('headerScore').innerHTML = `${score.toFixed(0)}<span>/100</span>`;
+      setTimeout(() => goTo(2), 1800);
+    }
 
-// ─── RESET ────────────────────────────────────────────
-function resetAll() {
-  location.reload();
-}
+    // ─── SCENE 2 SUBMIT ──────────────────────────────────
+    function submitScene2() {
+      const count = countIndicators('scene2');
+      const score = count * 12.5;
+      state.scene2.score = score;
+      state.scene2.catatan = document.getElementById('s2catatan').value;
 
-function printResult() {
-  window.print();
-}
+      const fb = document.getElementById('s2feedback');
+      fb.className = `feedback-box show ${count >= 6 ? 'success' : 'warning'}`;
+      fb.innerHTML = `<div class="feedback-title">✅ Skor FGD: ${score}/100 – ${getPredikat(score).label}</div><p>Catatan FGD tersimpan.</p>`;
 
-// ─── INIT ─────────────────────────────────────────────
-buildAspekRows();
+      document.getElementById('nav2').classList.add('done');
+      setTimeout(() => goTo(3), 1800);
+    }
 
-// Override goTo(5) to also build hasil
-const _origGoTo = goTo;
-window.goTo = function(n) {
-  _origGoTo(n);
-  if (n === 5) buildHasil();
-};
-</script>
+    // ─── ASPEK PENDAMPINGAN ──────────────────────────────
+    const aspekList = [
+      'Kehadiran & Ketepatan Waktu', 'Keterlibatan dalam Forum/Diskusi', 'Kemampuan Berkomunikasi dengan Bantuan', 
+      'Respons terhadap Akomodasi', 'Kemandirian dalam Kegiatan', 'Interaksi dengan Peserta Lain',
+    ];
+
+    function buildAspekRows() {
+      const container = document.getElementById('aspek-rows');
+      container.innerHTML = aspekList.map((asp, i) => `
+        <div style="display:flex; align-items:center; gap:16px; padding:10px 0; border-bottom:1px solid #F3F4F6;">
+          <div style="min-width:200px; font-size:14px; font-weight:500; color:var(--ink);">${asp}</div>
+          <div style="flex:1;">
+            <input type="range" min="0" max="100" step="10" value="60" oninput="updateAspek(${i}, this.value)" style="width:100%; accent-color:var(--green);">
+          </div>
+          <div id="aspek-val-${i}" style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; color:var(--green); min-width:40px; text-align:right;">60</div>
+        </div>
+      `).join('');
+      aspekList.forEach((_, i) => { state.scene3.aspek[i] = 60; });
+    }
+
+    function updateAspek(i, val) {
+      document.getElementById(`aspek-val-${i}`).textContent = val;
+      state.scene3.aspek[i] = parseInt(val);
+    }
+
+    function submitScene3() {
+      document.getElementById('nav3').classList.add('done');
+      const fb = document.getElementById('s3feedback');
+      fb.className = 'feedback-box show success';
+      fb.innerHTML = `<div class="feedback-title">✅ Catatan Pendampingan Tersimpan</div>`;
+      setTimeout(() => goTo(4), 1800);
+    }
+
+    // ─── FEEDBACK FORM ──────────────────────────────────
+    const feedbackState = {
+      likert: {}, checked: new Set(), stars: 0,
+      kesulitan: '', saran: '', kesiapan: '', nama: '', instansi: '',
+    };
+
+    function setLikert(groupId, val, btn) {
+      const group = document.getElementById(groupId);
+      group.querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      feedbackState.likert[groupId] = val;
+    }
+
+    function toggleCheck(el, key) {
+      el.classList.toggle('checked');
+      if (feedbackState.checked.has(key)) feedbackState.checked.delete(key);
+      else feedbackState.checked.add(key);
+    }
+
+    const starLabels = ['', 'Kurang', 'Cukup', 'Baik', 'Sangat Baik', 'Luar Biasa!'];
+    function setStars(n) {
+      feedbackState.stars = n;
+      for (let i = 1; i <= 5; i++) document.getElementById(`star${i}`).classList.toggle('lit', i <= n);
+      document.getElementById('starLabel').textContent = `${n} / 5 – ${starLabels[n]}`;
+    }
+
+    function submitFeedback() {
+      feedbackState.kesulitan  = document.getElementById('fbKesulitan').value.trim();
+      feedbackState.saran      = document.getElementById('fbSaran').value.trim();
+      feedbackState.kesiapan   = document.getElementById('fbKesiapan').value.trim();
+      feedbackState.nama       = document.getElementById('fbNama').value.trim();
+      feedbackState.instansi   = document.getElementById('fbInstansi').value.trim();
+
+      if (Object.keys(feedbackState.likert).length < 2) {
+        const fb = document.getElementById('s4feedback');
+        fb.className = 'feedback-box show warning';
+        fb.innerHTML = `<div class="feedback-title">⚠️ Mohon Lengkapi Penilaian</div><p>Harap isi minimal bagian A (Skala Likert).</p>`;
+        return;
+      }
+
+      const fb = document.getElementById('s4feedback');
+      fb.className = 'feedback-box show success';
+      fb.innerHTML = `<div class="feedback-title">✅ Terima kasih!</div>`;
+      document.getElementById('nav4').classList.add('done');
+      document.getElementById('btnSubmitFeedback').disabled = true;
+      setTimeout(() => goTo(5), 1800);
+    }
+
+    // ─── HASIL ───────────────────────────────────────────
+    function buildHasil() {
+      const s1 = state.scene1.score;
+      const s2 = state.scene2.score;
+      const aspekVals = Object.values(state.scene3.aspek);
+      const s3avg = aspekVals.length ? Math.round(aspekVals.reduce((a,b)=>a+b,0)/aspekVals.length) : 0;
+      const finalScore = Math.round((s1 * 0.35) + (s2 * 0.35) + (s3avg * 0.30));
+      const pred = getPredikat(finalScore);
+
+      const avgLikert = Object.keys(feedbackState.likert).length
+        ? (Object.values(feedbackState.likert).reduce((a,b)=>a+b,0) / Object.keys(feedbackState.likert).length).toFixed(1)
+        : '—';
+
+      document.getElementById('headerScore').innerHTML = `${finalScore}<span>/100</span>`;
+      document.getElementById('nav5').classList.add('done');
+
+      const hasil = document.getElementById('hasilContent');
+
+      const checkedLabels = {
+        skenario: 'Skenario situasi', indikator: 'Indikator terstruktur',
+        catatan: 'Kolom catatan', pendampingan: 'Formulir pendampingan',
+        rekap: 'Rekap otomatis', panduan: 'Panduan & tips'
+      };
+      const helpfulItems = [...feedbackState.checked].map(k => checkedLabels[k] || k);
+
+      hasil.innerHTML = `
+        <div class="rekap-grid">
+          <div class="rekap-card">
+            <div class="value">${finalScore}</div>
+            <div class="label">Skor Observasi</div>
+            <div style="margin-top:10px;"><span class="score-badge ${pred.cls}">${pred.label}</span></div>
+          </div>
+          <div class="rekap-card">
+            <div class="value" style="color:var(--blue);">${s1}</div>
+            <div class="label">Observasi Materi</div>
+          </div>
+          <div class="rekap-card">
+            <div class="value" style="color:var(--amber);">${s2}</div>
+            <div class="label">Observasi FGD</div>
+          </div>
+          <div class="rekap-card">
+            <div class="value" style="color:var(--purple);">${s3avg}</div>
+            <div class="label">Pendampingan</div>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-bottom:20px;">
+          <div class="section-card-header" style="background:linear-gradient(135deg,var(--purple-light),#fff);">
+            <div class="section-icon" style="background:var(--purple-light);">📊</div>
+            <h3>Detail Penilaian per Aspek</h3>
+          </div>
+          <div>
+            ${[['Observasi Materi SPM', s1],['Observasi FGD SPI', s2],['Pendampingan Harian', s3avg]].map(([name, score]) => `
+              <div class="materi-result-row">
+                <div class="name">${name}</div>
+                <div class="score-bar-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;"></div></div></div>
+                <div class="score-num">${score}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-bottom:20px;">
+          <div class="section-card-header" style="background:linear-gradient(135deg,var(--green-light),#fff);">
+            <div class="section-icon" style="background:var(--green-light);">📝</div>
+            <h3>Ringkasan Feedback Simulasi</h3>
+          </div>
+          <div style="padding:20px 24px; display:flex; flex-direction:column; gap:14px; font-size:14px;">
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <div style="background:var(--green-light); border-radius:10px; padding:12px 18px; flex:1; min-width:120px;">
+                <div style="font-size:11px; color:var(--green); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:4px;">Rata-rata Likert</div>
+                <div style="font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--green);">${avgLikert} <span style="font-size:14px; color:var(--muted);">/ 5</span></div>
+              </div>
+              <div style="background:var(--amber-light); border-radius:10px; padding:12px 18px; flex:1; min-width:120px;">
+                <div style="font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:4px;">Rating Bintang</div>
+                <div style="font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--amber);">${feedbackState.stars || '—'} <span style="font-size:14px; color:var(--muted);">★</span></div>
+              </div>
+              <div style="background:var(--blue-light); border-radius:10px; padding:12px 18px; flex:1; min-width:120px;">
+                <div style="font-size:11px; color:var(--blue); text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; margin-bottom:4px;">Aspek Membantu</div>
+                <div style="font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--blue);">${feedbackState.checked.size} <span style="font-size:14px; color:var(--muted);">item</span></div>
+              </div>
+            </div>
+            ${helpfulItems.length ? `<div><span style="font-weight:600;">Aspek paling membantu:</span> ${helpfulItems.join(', ')}</div>` : ''}
+            ${feedbackState.nama ? `<div><span style="font-weight:600;">Nama:</span> ${feedbackState.nama}${feedbackState.instansi ? ' – ' + feedbackState.instansi : ''}</div>` : ''}
+            ${feedbackState.kesulitan ? `<div><span style="font-weight:600;">Kesulitan:</span> ${feedbackState.kesulitan}</div>` : ''}
+            ${feedbackState.saran ? `<div><span style="font-weight:600;">Saran:</span> ${feedbackState.saran}</div>` : ''}
+            ${feedbackState.kesiapan ? `<div><span style="font-weight:600;">Kesiapan:</span> ${feedbackState.kesiapan}</div>` : ''}
+          </div>
+        </div>
+
+        <div class="feedback-box show ${finalScore >= 76 ? 'success' : 'warning'}" style="display:block;">
+          <div class="feedback-title">${finalScore >= 76 ? '🎉 Selamat!' : '📚 Perlu Peningkatan'} – ${pred.label} (${finalScore}/100)</div>
+          <p>${finalScore >= 88
+            ? 'Anda menunjukkan pemahaman yang sangat baik tentang penggunaan instrumen penilaian inklusif. Anda siap untuk mengobservasi peserta disabilitas dalam kegiatan DAD sesungguhnya!'
+            : finalScore >= 76
+            ? 'Pemahaman Anda sudah baik. Pastikan untuk memperhatikan kembali indikator aksesibilitas dan cara pencatatan hambatan peserta secara objektif.'
+            : 'Anda perlu memperdalam pemahaman tentang prinsip penilaian inklusif. Pelajari kembali perbedaan antara hambatan partisipasi dan ketidakmampuan peserta. Ulangi simulasi ini untuk meningkatkan skor.'
+          }</p>
+        </div>
+
+        <div class="tipbox" style="margin-top:20px;">
+          <div class="tipbox-title">📌 Prinsip Utama yang Harus Diingat</div>
+          <ol style="padding-left:18px; line-height:2;">
+            <li>Nilai <strong>konteks</strong>, bukan hanya perilaku mentah – pertimbangkan apakah hambatan ada pada peserta atau pada sistem.</li>
+            <li>Indikator aksesibilitas adalah tanggung jawab <strong>penyelenggara</strong>, bukan peserta.</li>
+            <li>Catat catatan pendampingan <strong>segera</strong> setelah kejadian, jangan ditunda.</li>
+            <li>Komunikasikan temuan kepada <strong>tim panitia</strong> untuk perbaikan berkelanjutan.</li>
+            <li>Instrumen ini adalah alat bantu – gunakan dengan <strong>empati dan kebijaksanaan</strong>.</li>
+          </ol>
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn btn-secondary" onclick="resetAll()">🔄 Ulangi Simulasi</button>
+          <button class="btn btn-amber" onclick="printResult()">🖨️ Cetak Hasil</button>
+        </div>
+      `;
+    }
+
+    // ─── TIPS FLOAT ───────────────────────────────────────
+    function toggleTips() {
+      document.getElementById('tipsPanel').classList.toggle('open');
+    }
+
+    // ─── RESET ────────────────────────────────────────────
+    function resetAll() {
+      location.reload();
+    }
+
+    function printResult() {
+      window.print();
+    }
+
+    // ─── INIT ─────────────────────────────────────────────
+    buildAspekRows();
+
+    // Override goTo(5) to also build hasil
+    const _origGoTo = goTo;
+    window.goTo = function(n) {
+      _origGoTo(n);
+      if (n === 5) buildHasil();
+    };
+  </script>
 </body>
+
 </html>
