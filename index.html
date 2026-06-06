@@ -1048,6 +1048,72 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ─── DATA KOLEKTIF / ADMIN PANEL ─── */
+    .data-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .data-panel-header {
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+    }
+    .data-panel-header h3 { color: #F8FAFC; font-size: 15px; font-weight: 600; flex: 1; }
+    .data-panel-body { padding: 20px 24px; }
+    .stat-chips {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .stat-chip {
+      background: #F8FAFC; border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+      display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 110px;
+    }
+    .stat-chip .chip-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px; font-weight: 900;
+      color: var(--green); line-height: 1;
+    }
+    .stat-chip .chip-lbl {
+      font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      font-family: 'DM Mono', monospace;
+    }
+    .data-table-wrap { overflow-x: auto; margin-bottom: 16px; }
+    .data-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12px; font-family: 'DM Mono', monospace;
+    }
+    .data-table th {
+      background: #F1F5F9; color: var(--muted);
+      padding: 8px 12px; text-align: left;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap; font-size: 11px; letter-spacing: 0.5px;
+    }
+    .data-table td {
+      padding: 8px 12px; border-bottom: 1px solid #F3F4F6;
+      color: var(--ink); vertical-align: top;
+      max-width: 200px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .data-table tr:hover td { background: var(--green-light); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .btn-export {
+      background: linear-gradient(135deg, #0F172A, #1E3A5F);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(15,23,42,0.3);
+    }
+    .btn-export:hover { background: linear-gradient(135deg, #1E293B, #1A3A6B); transform: translateY(-1px); }
+    .btn-danger {
+      background: var(--white); color: var(--red);
+      border: 1.5px solid var(--red);
+    }
+    .btn-danger:hover { background: var(--red-light); }
   </style>
 </head>
 
@@ -1951,15 +2017,200 @@
         return;
       }
 
+      // ─── SIMPAN KE LOCALSTORAGE ───
+      const entry = {
+        timestamp: new Date().toISOString(),
+        nama: feedbackState.nama || '(Anonim)',
+        instansi: feedbackState.instansi || '',
+        lk1: feedbackState.likert['lk1'] || '',
+        lk2: feedbackState.likert['lk2'] || '',
+        lk3: feedbackState.likert['lk3'] || '',
+        lk4: feedbackState.likert['lk4'] || '',
+        avgLikert: Object.keys(feedbackState.likert).length
+          ? (Object.values(feedbackState.likert).reduce((a,b)=>a+b,0) / Object.keys(feedbackState.likert).length).toFixed(2)
+          : '',
+        stars: feedbackState.stars || '',
+        aspekMembantu: [...feedbackState.checked].join('; '),
+        kesulitan: feedbackState.kesulitan,
+        saran: feedbackState.saran,
+        kesiapan: feedbackState.kesiapan,
+        skorObservasi: Math.round((state.scene1.score * 0.35) + (state.scene2.score * 0.35) +
+          (Object.values(state.scene3.aspek).length
+            ? Math.round(Object.values(state.scene3.aspek).reduce((a,b)=>a+b,0)/Object.values(state.scene3.aspek).length) * 0.30
+            : 0)),
+        skorMateri: state.scene1.score,
+        skorFGD: state.scene2.score,
+      };
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('simul_feedback_log') || '[]');
+        existing.push(entry);
+        localStorage.setItem('simul_feedback_log', JSON.stringify(existing));
+      } catch(e) { console.warn('localStorage tidak tersedia:', e); }
+
       const fb = document.getElementById('s4feedback');
       fb.className = 'feedback-box show success';
-      fb.innerHTML = `<div class="feedback-title">✅ Terima kasih!</div>`;
+      fb.innerHTML = `<div class="feedback-title">✅ Terima kasih! Feedback tersimpan.</div><p>Data Anda telah direkam. Total responden: <strong>${JSON.parse(localStorage.getItem('simul_feedback_log')||'[]').length}</strong></p>`;
       document.getElementById('nav4').classList.add('done');
       document.getElementById('btnSubmitFeedback').disabled = true;
       setTimeout(() => goTo(5), 1800);
     }
 
-    // ─── HASIL ───────────────────────────────────────────
+    // ─── CSV EXPORT ────────────────────────────────────────────
+    const CSV_HEADERS = [
+      'Timestamp','Nama','Instansi',
+      'Likert_MemahaminstrumenPenilaian','Likert_SkenarioRealistis',
+      'Likert_TampilanMudah','Likert_LayakDiterapkan','Rata2Likert',
+      'RatingBintang','AspekMembantu',
+      'Kesulitan','Saran','Kesiapan',
+      'SkorObservasi','SkorMateri','SkorFGD'
+    ];
+
+    function escapeCsv(val) {
+      const s = String(val === null || val === undefined ? '' : val);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }
+
+    function exportCsv() {
+      const log = JSON.parse(localStorage.getItem('simul_feedback_log') || '[]');
+      if (!log.length) { alert('Belum ada data feedback.'); return; }
+      const rows = [CSV_HEADERS.join(',')];
+      log.forEach(e => {
+        rows.push([
+          e.timestamp, e.nama, e.instansi,
+          e.lk1, e.lk2, e.lk3, e.lk4, e.avgLikert,
+          e.stars, e.aspekMembantu,
+          e.kesulitan, e.saran, e.kesiapan,
+          e.skorObservasi, e.skorMateri, e.skorFGD
+        ].map(escapeCsv).join(','));
+      });
+      const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `feedback_simulasi_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearFeedbackLog() {
+      if (!confirm('Hapus semua data feedback? Tindakan ini tidak dapat dibatalkan.')) return;
+      localStorage.removeItem('simul_feedback_log');
+      buildHasil();
+    }
+
+    function buildDataPanel() {
+      const log = JSON.parse(localStorage.getItem('simul_feedback_log') || '[]');
+      if (!log.length) {
+        return `
+          <div class="data-panel">
+            <div class="data-panel-header">
+              <div class="section-icon" style="background:rgba(255,255,255,0.1); color:#94A3B8; font-size:16px;">📁</div>
+              <h3>Data Feedback Kolektif</h3>
+              <span style="font-family:'DM Mono',monospace; font-size:10px; color:#64748B; background:rgba(255,255,255,0.05); padding:3px 10px; border-radius:20px;">0 Responden</span>
+            </div>
+            <div class="data-panel-body">
+              <div style="text-align:center; padding:32px; color:var(--muted);">
+                <div style="font-size:40px; margin-bottom:12px;">📊</div>
+                <div style="font-size:14px;">Belum ada data feedback tersimpan.<br>Data akan muncul setelah instruktur mengirim formulir feedback.</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      const n = log.length;
+      const avgLikertAll = log.reduce((s, e) => s + parseFloat(e.avgLikert || 0), 0) / n;
+      const avgStars     = log.filter(e => e.stars).reduce((s, e) => s + parseInt(e.stars), 0) /
+                           (log.filter(e => e.stars).length || 1);
+      const avgSkor      = log.reduce((s, e) => s + parseInt(e.skorObservasi || 0), 0) / n;
+
+      // Aspek terpopuler
+      const aspekCount = {};
+      log.forEach(e => {
+        (e.aspekMembantu || '').split('; ').filter(Boolean).forEach(a => {
+          aspekCount[a] = (aspekCount[a] || 0) + 1;
+        });
+      });
+      const topAspek = Object.entries(aspekCount).sort((a,b) => b[1]-a[1]).slice(0,3).map(([k,v]) => `${k} (${v}x)`).join(', ') || '—';
+
+      // Preview table (last 8)
+      const preview = log.slice(-8).reverse();
+      const tableRows = preview.map((e, i) => `
+        <tr>
+          <td>${log.length - i}</td>
+          <td>${e.nama}</td>
+          <td>${e.instansi || '—'}</td>
+          <td style="text-align:center; font-weight:600; color:var(--green);">${e.avgLikert}</td>
+          <td style="text-align:center;">${e.stars ? e.stars + ' ★' : '—'}</td>
+          <td>${e.skorObservasi}</td>
+          <td style="max-width:160px;">${(e.saran || '').substring(0,60)}${(e.saran||'').length > 60 ? '...' : ''}</td>
+          <td style="color:var(--muted);">${new Date(e.timestamp).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="data-panel">
+          <div class="data-panel-header">
+            <div class="section-icon" style="background:rgba(255,255,255,0.1); color:#38BDF8; font-size:16px;">📊</div>
+            <h3>Data Feedback Kolektif</h3>
+            <span style="font-family:'DM Mono',monospace; font-size:10px; color:#94A3B8; background:rgba(255,255,255,0.1); padding:3px 10px; border-radius:20px;">${n} Responden</span>
+          </div>
+          <div class="data-panel-body">
+            <div class="stat-chips">
+              <div class="stat-chip">
+                <div class="chip-val">${n}</div>
+                <div class="chip-lbl">Total Responden</div>
+              </div>
+              <div class="stat-chip">
+                <div class="chip-val" style="color:var(--green);">${avgLikertAll.toFixed(1)}</div>
+                <div class="chip-lbl">Avg Likert (/ 5)</div>
+              </div>
+              <div class="stat-chip">
+                <div class="chip-val" style="color:#F59E0B;">${avgStars.toFixed(1)}</div>
+                <div class="chip-lbl">Avg Rating (★)</div>
+              </div>
+              <div class="stat-chip">
+                <div class="chip-val" style="color:var(--blue);">${Math.round(avgSkor)}</div>
+                <div class="chip-lbl">Avg Skor Obs.</div>
+              </div>
+            </div>
+
+            <div style="font-size:13px; margin-bottom:12px; color:var(--ink);">
+              <strong>Aspek terpopuler:</strong> ${topAspek}
+            </div>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th><th>Nama</th><th>Instansi</th>
+                    <th>Avg Likert</th><th>Bintang</th><th>Skor Obs.</th>
+                    <th>Cuplikan Saran</th><th>Waktu</th>
+                  </tr>
+                </thead>
+                <tbody>${tableRows}</tbody>
+              </table>
+            </div>
+            ${n > 8 ? `<div style="font-size:12px; color:var(--muted); margin-bottom:12px;">ℹ️ Menampilkan 8 entri terakhir dari ${n} total responden.</div>` : ''}
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-export" onclick="exportCsv()">
+                💾 Unduh CSV (${n} baris)
+              </button>
+              <button class="btn btn-danger" onclick="clearFeedbackLog()">
+                🗑️ Hapus Semua Data
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ─── HASIL (updated) ──────────────────────────────────
     function buildHasil() {
       const s1 = state.scene1.score;
       const s2 = state.scene2.score;
@@ -2023,7 +2274,7 @@
         <div class="section-card" style="margin-bottom:20px;">
           <div class="section-card-header" style="background:linear-gradient(135deg,var(--green-light),#fff);">
             <div class="section-icon" style="background:var(--green-light);">📝</div>
-            <h3>Ringkasan Feedback Simulasi</h3>
+            <h3>Ringkasan Feedback Sesi Ini</h3>
           </div>
           <div style="padding:20px 24px; display:flex; flex-direction:column; gap:14px; font-size:14px;">
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
@@ -2047,6 +2298,8 @@
             ${feedbackState.kesiapan ? `<div><span style="font-weight:600;">Kesiapan:</span> ${feedbackState.kesiapan}</div>` : ''}
           </div>
         </div>
+
+        ${buildDataPanel()}
 
         <div class="feedback-box show ${finalScore >= 76 ? 'success' : 'warning'}" style="display:block;">
           <div class="feedback-title">${finalScore >= 76 ? '🎉 Selamat!' : '📚 Perlu Peningkatan'} – ${pred.label} (${finalScore}/100)</div>
@@ -2072,6 +2325,7 @@
         <div class="btn-actions">
           <button class="btn btn-secondary" onclick="resetAll()">🔄 Ulangi Simulasi</button>
           <button class="btn btn-amber" onclick="printResult()">🖨️ Cetak Hasil</button>
+          <button class="btn btn-export" onclick="exportCsv()">💾 Ekspor Semua CSV</button>
         </div>
       `;
     }
